@@ -1,0 +1,184 @@
+﻿using PartyAIControls.ViewModels.Components;
+using PartyAIControls.ViewModels.Dropdowns;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.Core;
+using TaleWorlds.Core.ImageIdentifiers;
+using TaleWorlds.Core.ViewModelCollection.Information;
+using TaleWorlds.Library;
+using TaleWorlds.Localization;
+
+namespace PartyAIControls.ViewModels.MenuOptionVMs
+{
+  public class PartyAICaravanOptionsVM : ViewModel
+  {
+    private readonly Action _onClosePartyOptions;
+    private PartyAIOptionToggleVM _filterSettlementsToggle;
+    private string _filteredSettlementsCount;
+    private HintViewModel _filteredSettlementsCountHint;
+    private readonly PartyAIClanPartySettings _settings;
+    internal static List<Settlement> FilteredSettlements = new();
+    internal static bool IsSelectFilteredSettlements = false;
+
+    public PartyAICaravanOptionsVM(PartyAIClanPartySettings settings, Action callback)
+    {
+      if (settings == null) { return; }
+      _settings = settings;
+
+      if (_settings.Hero != null)
+      {
+        TitleText = new TextObject("{=PAIC76hjKpD}Edit Caravan Options for {HERO}'s party").SetTextVariable("HERO", _settings.Hero.Name.ToString()).ToString();
+      }
+      else
+      {
+        TitleText = new TextObject("{=PAI2mEbIPHQ}Edit Caravan Options").ToString();
+      }
+
+      MaxTroopTierDropdown = new(settings.MaxTroopTier, null);
+
+      _onClosePartyOptions = callback;
+      FilterSettlementsToggle = new(new("{=PAI7L3x9T3p}Filter Trading Settlements"), settings.FilterSettlements, new("{=PAIRrqrDxYm}The caravan will only visit settlements in this list."));
+      FilteredSettlements = settings.FilteredSettlements?.ToList() ?? new();
+
+      RefreshValues();
+    }
+
+    [DataSourceProperty]
+    public string FilterSettlementsText => new TextObject("{=PAIjkqd24XT} - Selected: ").ToString();
+
+    [DataSourceProperty]
+    public string FilteredSettlementsCount
+    {
+      get
+      {
+        return _filteredSettlementsCount;
+      }
+      set
+      {
+        if (value != _filteredSettlementsCount)
+        {
+          _filteredSettlementsCount = value;
+          OnPropertyChangedWithValue(value, "FilteredSettlementsCount");
+        }
+      }
+    }
+
+    [DataSourceProperty]
+    public HintViewModel FilteredSettlementsCountHint
+    {
+      get
+      {
+        return _filteredSettlementsCountHint;
+      }
+      set
+      {
+        if (value != _filteredSettlementsCountHint)
+        {
+          _filteredSettlementsCountHint = value;
+          OnPropertyChangedWithValue(value, "FilteredSettlementsCountHint");
+        }
+      }
+    }
+
+
+    [DataSourceProperty]
+    public PartyAIOptionToggleVM FilterSettlementsToggle
+    {
+      get
+      {
+        return _filterSettlementsToggle;
+      }
+      set
+      {
+        if (value != _filterSettlementsToggle)
+        {
+          _filterSettlementsToggle = value;
+          OnPropertyChangedWithValue(value, "FilterSettlementsToggle");
+        }
+      }
+    }
+
+    [DataSourceProperty] public string AcceptText => new TextObject("{=bV75iwKa}Save").ToString();
+    [DataSourceProperty] public string CancelText => GameTexts.FindText("str_cancel").ToString();
+    [DataSourceProperty] public string TitleText { get; private set; }
+    [DataSourceProperty] public PartyAIMaxTroopTierDropdownVM MaxTroopTierDropdown { get; private set; }
+    [DataSourceProperty] public string MaxTroopTierText => new TextObject("{=PAIn4UJJg3a}Max Troop Tier").ToString();
+    [DataSourceProperty] public HintViewModel MaxTroopTierHint => new(new TextObject("{=PAIKeTFa2PX}Maximum troop tier to upgrade troops to. If you lower this setting while there are higher tier troops in the party, they will be downgraded."));
+
+    public override void RefreshValues()
+    {
+      base.RefreshValues();
+      string settlements = string.Empty;
+      foreach (Settlement s in FilteredSettlements)
+      {
+        if (s != FilteredSettlements.First())
+        {
+          settlements += Environment.NewLine;
+        }
+        settlements += s.ToString();
+      }
+      FilteredSettlementsCountHint = new(new("{=!}" + settlements));
+
+      FilteredSettlementsCount = FilteredSettlements.Count().ToString();
+    }
+
+    public void EditFilteredSettlements()
+    {
+      string title = new TextObject("{=PAIr1WS36dp}Settlements to Visit").ToString();
+      List<Settlement> settlements = Settlement.All.Where(s => s.IsTown).OrderBy(s => s.Name.ToString()).ToList();
+      List<InquiryElement> list = new();
+      foreach (Settlement settlement in settlements)
+      {
+        TextObject north = new("{=PAImajjVs8d}north");
+        TextObject south = new("{=PAISzVDwcWu}south");
+        TextObject east = new("{=PAIHQQPyo2M}east");
+        TextObject west = new("{=PAIWGp1Ti1N}west");
+        TextObject hint = new TextObject("{=PAI7v81Hher}Currently {DIRECTION} of you.").SetTextVariable("DIRECTION", "");
+        string direction = string.Empty;
+        if (settlement.Position.ToVec2().y > MobileParty.MainParty.Position.ToVec2().y)
+        {
+          direction += north;
+        }
+        if (settlement.Position.ToVec2().y < MobileParty.MainParty.Position.ToVec2().y)
+        {
+          direction += south;
+        }
+        if (settlement.Position.ToVec2().x > MobileParty.MainParty.Position.ToVec2().x)
+        {
+          direction += east;
+        }
+        if (settlement.Position.ToVec2().x < MobileParty.MainParty.Position.ToVec2().x)
+        {
+          direction += west;
+        }
+        hint.SetTextVariable("DIRECTION", direction);
+        list.Add(new InquiryElement(settlement, settlement.Name.ToString(), new BannerImageIdentifier(settlement.MapFaction?.Banner), true, hint.ToString()));
+      }
+      IsSelectFilteredSettlements = true;
+      MBInformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(title, null, list, isExitShown: true, 1, list.Count,
+        GameTexts.FindText("str_done").ToString(), GameTexts.FindText("str_cancel").ToString(), (List<InquiryElement> results) =>
+        {
+          FilteredSettlements = results.ConvertAll(r => r.Identifier as Settlement).ToList();
+          RefreshValues();
+        }, null, null, true)
+      );
+    }
+
+    public void AcceptEditPartyOptions()
+    {
+      _settings.MaxTroopTier = MaxTroopTierDropdown.SortOptions.SelectedItem.Max;
+      _settings.FilterSettlements = FilterSettlementsToggle.IsSelected;
+      _settings.FilteredSettlements = FilteredSettlements.ToList();
+
+      _onClosePartyOptions?.Invoke();
+    }
+
+    public void CancelEditPartyOptions()
+    {
+      _onClosePartyOptions?.Invoke();
+    }
+  }
+}
