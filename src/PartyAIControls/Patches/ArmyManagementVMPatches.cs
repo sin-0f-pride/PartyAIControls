@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using HarmonyLib;
+using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
@@ -7,15 +8,19 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.ViewModelCollection.ArmyManagement;
 using TaleWorlds.Core;
 
-namespace PartyAIControls.HarmonyPatches
+namespace PartyAIControls.Patches
 {
-
-    internal class ArmyManagementVMPatches
+    [HarmonyPatch(typeof(ArmyManagementVM), "ExecuteDone")]
+    public static class ArmyManagementVMPatches
     {
-        internal class Constructor
+        public static class RefreshValuesPatch
         {
-            private static void Postfix(ArmyManagementVM __instance)
+            public static void Postfix(ArmyManagementVM __instance)
             {
+                if (!SubModule.BannerKings)
+                {
+
+                }
                 if (Clan.PlayerClan.IsUnderMercenaryService && __instance.PartyList != null)
                 {
                     List<ArmyManagementItemVM> parties = __instance.PartyList.ToList();
@@ -34,10 +39,15 @@ namespace PartyAIControls.HarmonyPatches
             }
         }
 
-        internal class ExecuteDone
+        [HarmonyPatch(typeof(ArmyManagementVM), "RefreshValues")]
+        public static class ExecuteDonePatch
         {
-            private static void Postfix(ArmyManagementVM __instance)
+            public static void Postfix(ArmyManagementVM __instance)
             {
+                if (!SubModule.BannerKings)
+                {
+                    return;
+                }
                 if (__instance.PartiesInCart.Count > 1)
                 {
                     if (MobileParty.MainParty.Army == null)

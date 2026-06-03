@@ -9,7 +9,7 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 
-namespace PartyAIControls.CampaignBehaviors
+namespace PartyAIControls.Behaviors
 {
   internal class PartyAIFoodBuyer : CampaignBehaviorBase
   {

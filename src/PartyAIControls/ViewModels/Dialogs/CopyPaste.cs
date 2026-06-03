@@ -1,4 +1,4 @@
-﻿using PartyAIControls.UIExtenderPatches;
+﻿using PartyAIControls.PrefabExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +27,7 @@ namespace PartyAIControls.ViewModels.Dialogs
 
       if (hero == null) { return; }
 
-      CopyCallback(SubModule.PartySettingsManager.Settings(hero));
+      CopyCallback(SubModule.PartyAIClanPartySettingsManager.Settings(hero));
     }
 
     public static void CopyGarrisonTo(Settlement settlement, Action callback = null)
@@ -36,7 +36,7 @@ namespace PartyAIControls.ViewModels.Dialogs
 
       if (settlement == null) { return; }
 
-      CopyCallback(SubModule.PartySettingsManager.Settings(settlement));
+      CopyCallback(SubModule.PartyAIClanPartySettingsManager.Settings(settlement));
     }
 
     internal static void CopyCallback(PartyAIClanPartySettings source, Action<List<InquiryElement>> callback = null)
@@ -60,7 +60,7 @@ namespace PartyAIControls.ViewModels.Dialogs
       newList.Add(new InquiryElement(source.PartyTemplate, TemplateText, null, true, hint.SetTextVariable("OPTION", TemplateText).ToString()));
       if (_source.Settlement == null)
       {
-        if (!SubModule.PartySettingsManager.IsCaravanManageable(_source.Hero))
+        if (!SubModule.PartyAIClanPartySettingsManager.IsCaravanManageable(_source.Hero))
         {
           newList.Add(new InquiryElement(source.Order ?? new PAICustomOrder(null, OrderType.None), OrderText, null, true, hint.SetTextVariable("OPTION", OrderText).ToString()));
         }
@@ -82,13 +82,13 @@ namespace PartyAIControls.ViewModels.Dialogs
       List<Hero> heroList = new();
       List<InquiryElement> newList;
 
-      if (SubModule.PartySettingsManager.IsCaravanManageable(_source.Hero))
+      if (SubModule.PartyAIClanPartySettingsManager.IsCaravanManageable(_source.Hero))
       {
-        heroList = Clan.PlayerClan.Heroes.Where(h => SubModule.PartySettingsManager.IsCaravanManageable(h) && h != _source.Hero).ToList();
+        heroList = Clan.PlayerClan.Heroes.Where(h => SubModule.PartyAIClanPartySettingsManager.IsCaravanManageable(h) && h != _source.Hero).ToList();
       }
       else if (_source.Settlement != null)
       {
-        newList = Clan.PlayerClan.Settlements.Where(s => SubModule.PartySettingsManager.IsGarrisonManageable(s) && s != _source.Settlement).ToList().ConvertAll(s =>
+        newList = Clan.PlayerClan.Settlements.Where(s => SubModule.PartyAIClanPartySettingsManager.IsGarrisonManageable(s) && s != _source.Settlement).ToList().ConvertAll(s =>
           new InquiryElement(s, s.Name.ToString(), new BannerImageIdentifier(s.OwnerClan.Banner))
         );
         goto done;
@@ -116,7 +116,7 @@ namespace PartyAIControls.ViewModels.Dialogs
     {
       foreach (InquiryElement p in list)
       {
-        PartyAIClanPartySettings settings = p.Identifier is Settlement ? SubModule.PartySettingsManager.Settings((Settlement)p.Identifier) : SubModule.PartySettingsManager.Settings((Hero)p.Identifier);
+        PartyAIClanPartySettings settings = p.Identifier is Settlement ? SubModule.PartyAIClanPartySettingsManager.Settings((Settlement)p.Identifier) : SubModule.PartyAIClanPartySettingsManager.Settings((Hero)p.Identifier);
         foreach (InquiryElement source in _copySources)
         {
           CopySettings(settings, source);

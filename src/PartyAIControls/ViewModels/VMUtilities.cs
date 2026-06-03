@@ -9,7 +9,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Localization;
 using static Helpers.PartyScreenHelper;
 
-namespace PartyAIControls.ViewModels.Misc
+namespace PartyAIControls.ViewModels
 {
     internal static class VMUtilities
     {

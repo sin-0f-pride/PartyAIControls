@@ -18,7 +18,7 @@ using TaleWorlds.Localization;
 using static Helpers.InventoryScreenHelper;
 
 
-namespace PartyAIControls.CampaignBehaviors
+namespace PartyAIControls.Behaviors
 {
     public class PartyAIClanPartySettingsManager : CampaignBehaviorBase
     {
@@ -251,7 +251,7 @@ namespace PartyAIControls.CampaignBehaviors
             return true;
         }
 
-        internal bool AllowCaravanConversion(Hero hero) => SubModule.PartySettingsManager.IsCaravanManageable(hero) && SubModule.PartySettingsManager.AllowTroopConversionForCaravans;
+        internal bool AllowCaravanConversion(Hero hero) => SubModule.PartyAIClanPartySettingsManager.IsCaravanManageable(hero) && SubModule.PartyAIClanPartySettingsManager.AllowTroopConversionForCaravans;
 
         internal bool IsCaravanManageable(Hero hero)
         {
@@ -299,7 +299,7 @@ namespace PartyAIControls.CampaignBehaviors
             {
                 if (!characters.Contains(troop) && !troop.IsHero && troop.Culture != null && !troop.Culture.IsBandit && occupations.Contains(troop.Occupation))
                 {
-                    characters.AppendList(SubModule.PartyTroopRecruiter.TraverseTree(troop).Where(co => co.UpgradeTargets?.Length == 0).ToList());
+                    characters.AppendList(SubModule.PartyAITroopRecruiter.TraverseTree(troop).Where(co => co.UpgradeTargets?.Length == 0).ToList());
                 }
             }
 

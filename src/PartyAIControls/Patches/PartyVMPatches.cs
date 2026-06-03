@@ -2,7 +2,7 @@
 using TaleWorlds.CampaignSystem.ViewModelCollection.Party;
 using TaleWorlds.Localization;
 
-namespace PartyAIControls.HarmonyPatches
+namespace PartyAIControls.Patches
 {
     [HarmonyPatch]
     internal class PartyVMPatches

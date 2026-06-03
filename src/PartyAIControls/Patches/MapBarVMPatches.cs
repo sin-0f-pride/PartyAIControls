@@ -3,16 +3,14 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Map.MapBar;
 using TaleWorlds.Localization;
 
-namespace PartyAIControls.HarmonyPatches
+namespace PartyAIControls.Patches
 {
     [HarmonyPatch(typeof(MapBarVM), "UpdateCanGatherArmyAndReason")]
     internal class MapBarVMPatches
     {
-        private static readonly bool _bannerKingsLoaded = AccessTools.TypeByName("BannerKings.Main") != null;
-
         private static void Postfix(MapBarVM __instance)
         {
-            if (_bannerKingsLoaded)
+            if (SubModule.BannerKings)
             {
                 if (Clan.PlayerClan.Kingdom == null || Clan.PlayerClan.IsUnderMercenaryService)
                 {
@@ -22,7 +20,6 @@ namespace PartyAIControls.HarmonyPatches
             }
 
             IFaction mapFaction = Hero.MainHero.MapFaction;
-
             if (mapFaction != null && !mapFaction.IsKingdomFaction)
             {
                 __instance.CanGatherArmy = true;

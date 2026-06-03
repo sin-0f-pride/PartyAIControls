@@ -52,7 +52,7 @@ namespace PartyAIControls.ViewModels.MenuOptionVMs
       UpdatePatrolRadiusText();
 
       // disable dismiss troops setting if troop conversion is enabled
-      if (SubModule.PartySettingsManager.AllowTroopConversion)
+      if (SubModule.PartyAIClanPartySettingsManager.AllowTroopConversion)
       {
         DismissUnwantedTroopsToggle.IsSelected = false;
         DismissUnwantedTroopsToggle.IsDisabled = true;
@@ -98,7 +98,7 @@ namespace PartyAIControls.ViewModels.MenuOptionVMs
     {
       string titleText = new TextObject("{=PAIn8Kp9KPp}Enter Automatic Recruitment Percentage").ToString();
       string detailText = new TextObject("{=PAIdpT9SuVN}Party will go on a recruitment run when under this percentage of its maximum troops.").ToString();
-      SubModule.InformationManager.ShowNumberPickerInquiry((int)(_autoRecruitmentPercentage * 100f), 1, 99, titleText, detailText, (int value) =>
+      SubModule.PACInformationManager.ShowNumberPickerInquiry((int)(_autoRecruitmentPercentage * 100f), 1, 99, titleText, detailText, (int value) =>
       {
         _autoRecruitmentPercentage = value / 100f;
         OnPropertyChanged("RecruitmentPercentageText");
@@ -109,7 +109,7 @@ namespace PartyAIControls.ViewModels.MenuOptionVMs
     {
       string titleText = new TextObject("{=PAIi6it5mnL}Enter Dismiss Unwanted Troops Percentage").ToString();
       string detailText = new TextObject("{=PAItU2CGhot}Party will start dismissing troops that don't fit its party template once over this percentage of its max troops").ToString();
-      SubModule.InformationManager.ShowNumberPickerInquiry((int)(_dismissUnwantedTroopsPercentage * 100f), 1, 99, titleText, detailText, (int value) =>
+      SubModule.PACInformationManager.ShowNumberPickerInquiry((int)(_dismissUnwantedTroopsPercentage * 100f), 1, 99, titleText, detailText, (int value) =>
       {
         _dismissUnwantedTroopsPercentage = value / 100f;
         OnPropertyChanged("DismissUnwantedTroopsPercentageText");
@@ -119,7 +119,7 @@ namespace PartyAIControls.ViewModels.MenuOptionVMs
     public void EditBuyHorsesBudget()
     {
       string titleText = new TextObject("{=PAID8JkoxK0}Buy Horses Budget").ToString();
-      SubModule.InformationManager.ShowNumberPickerInquiry((int)(_dismissUnwantedTroopsPercentage * 100f), 0, 50000, titleText, string.Empty, (int value) =>
+      SubModule.PACInformationManager.ShowNumberPickerInquiry((int)(_dismissUnwantedTroopsPercentage * 100f), 0, 50000, titleText, string.Empty, (int value) =>
       {
         _buyHorsesBudget = value;
         OnPropertyChanged("BuyHorsesBudgetAmount");
@@ -129,7 +129,7 @@ namespace PartyAIControls.ViewModels.MenuOptionVMs
     public void EditPatrolRadius()
     {
       string titleText = new TextObject("{=PAIGHyxwrgx}Patrol Radius").ToString();
-      SubModule.InformationManager.ShowNumberPickerInquiry((int)(_patrolRadius * 100f), 10, 200, titleText, string.Empty, (int result) =>
+      SubModule.PACInformationManager.ShowNumberPickerInquiry((int)(_patrolRadius * 100f), 10, 200, titleText, string.Empty, (int result) =>
       {
         _patrolRadius = result / 100f;
         UpdatePatrolRadiusText();

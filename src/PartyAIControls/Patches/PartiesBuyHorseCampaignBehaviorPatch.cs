@@ -9,7 +9,7 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 
-namespace PartyAIControls.HarmonyPatches
+namespace PartyAIControls.Patches
 {
     [HarmonyPatch]
     internal class PartiesBuyHorseCampaignBehaviorPatch
@@ -25,11 +25,11 @@ namespace PartyAIControls.HarmonyPatches
             }
             if (!settlement.IsTown && !settlement.IsVillage) { return true; }
 
-            if (!SubModule.PartySettingsManager.IsHeroManageable(mobileParty.LeaderHero))
+            if (!SubModule.PartyAIClanPartySettingsManager.IsHeroManageable(mobileParty.LeaderHero))
             {
                 return true;
             }
-            PartyAIClanPartySettings settings = SubModule.PartySettingsManager.Settings(mobileParty.LeaderHero);
+            PartyAIClanPartySettings settings = SubModule.PartyAIClanPartySettingsManager.Settings(mobileParty.LeaderHero);
             if (!settings.BuyHorses) { return true; }
 
             int toSell = mobileParty.Party.NumberOfMounts - mobileParty.Party.NumberOfMenWithoutHorse;

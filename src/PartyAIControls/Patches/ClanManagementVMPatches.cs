@@ -1,9 +1,9 @@
 ﻿using HarmonyLib;
-using PartyAIControls.UIExtenderPatches;
+using PartyAIControls.PrefabExtensions;
 using SandBox.GauntletUI;
 using TaleWorlds.CampaignSystem.GameState;
 
-namespace PartyAIControls.HarmonyPatches
+namespace PartyAIControls.Patches
 {
     internal class ClanManagementVMPatches
     {

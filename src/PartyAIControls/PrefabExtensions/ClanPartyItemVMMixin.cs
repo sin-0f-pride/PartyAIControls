@@ -1,6 +1,6 @@
 ﻿using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.ViewModels;
-using PartyAIControls.CampaignBehaviors;
+using PartyAIControls.Behaviors;
 using PartyAIControls.ViewModels.Components;
 using PartyAIControls.ViewModels.Dialogs;
 using System;
@@ -12,13 +12,13 @@ using TaleWorlds.CampaignSystem.ViewModelCollection.ClanManagement;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 
-namespace PartyAIControls.UIExtenderPatches
+namespace PartyAIControls.PrefabExtensions
 {
   [ViewModelMixin(nameof(ClanPartyItemVM.UpdateProperties))]
   internal class ClanPartyItemVMMixin : BaseViewModelMixin<ClanPartyItemVM>
   {
     private readonly ClanPartyItemVM _vm;
-    private PartyAIClanPartySettingsManager _manager => SubModule.PartySettingsManager;
+    private PartyAIClanPartySettingsManager _manager => SubModule.PartyAIClanPartySettingsManager;
     private static bool _enabled = true;
     private static Hero _cachedHero;
     private readonly int _spacing;
@@ -42,22 +42,22 @@ namespace PartyAIControls.UIExtenderPatches
     }
 
     [DataSourceMethod]
-    public void EditPartyComposition() => SubModule.InformationManager.ShowPartyCompositionInquiry(_heroSettings, EditPartyCompositionCallback);
+    public void EditPartyComposition() => SubModule.PACInformationManager.ShowPartyCompositionInquiry(_heroSettings, EditPartyCompositionCallback);
 
     [DataSourceMethod]
     public void EditPartyOptions()
     {
       if (_manager.IsLeadingCaravan(_hero))
       {
-        SubModule.InformationManager.ShowCaravanOptionsInquiry(_heroSettings, OnRefresh);
+        SubModule.PACInformationManager.ShowCaravanOptionsInquiry(_heroSettings, OnRefresh);
       }
       else if (IsGarrison)
       {
-        SubModule.InformationManager.ShowGarrisonOptionsInquiry(_heroSettings, OnRefresh);
+        SubModule.PACInformationManager.ShowGarrisonOptionsInquiry(_heroSettings, OnRefresh);
       }
       else
       {
-        SubModule.InformationManager.ShowPartyOptionsInquiry(_heroSettings, OnRefresh);
+        SubModule.PACInformationManager.ShowPartyOptionsInquiry(_heroSettings, OnRefresh);
       }
     }
 
@@ -177,7 +177,7 @@ namespace PartyAIControls.UIExtenderPatches
     }
 
     [DataSourceMethod]
-    public void OpenOrderQueue() => SubModule.InformationManager.ShowOrderQueueInquiry(_heroSettings, OnRefresh);
+    public void OpenOrderQueue() => SubModule.PACInformationManager.ShowOrderQueueInquiry(_heroSettings, OnRefresh);
 
     [DataSourceMethod]
     public void ViewPartyTemplate()

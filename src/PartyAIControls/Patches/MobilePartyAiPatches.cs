@@ -5,7 +5,7 @@ using TaleWorlds.CampaignSystem.Map;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Library;
 
-namespace PartyAIControls.HarmonyPatches
+namespace PartyAIControls.Patches
 {
     [HarmonyPatch]
     internal class MobilePartyAiPatches
@@ -15,7 +15,7 @@ namespace PartyAIControls.HarmonyPatches
         [HarmonyPatch(typeof(MobilePartyAi), "GetLandPatrolBehavior")]
         private static void Postfix(ref AiBehavior patrolBehavior, ref CampaignVec2 patrolTargetPoint, ref CampaignVec2 patrollingCenterPoint, bool forceUpdate, MobileParty ____mobileParty)
         {
-            if (!SubModule.PartySettingsManager.AggressivePatrols) { return; }
+            if (!SubModule.PartyAIClanPartySettingsManager.AggressivePatrols) { return; }
             if (____mobileParty?.MapFaction == null || ____mobileParty.LeaderHero == null) { return; }
             if (!____mobileParty.MapFaction.IsKingdomFaction && ____mobileParty.ActualClan != Clan.PlayerClan) { return; }
 

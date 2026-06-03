@@ -48,20 +48,20 @@ namespace PartyAIControls.ViewModels
       PartyLimitText = new TextObject("{=PAIt2WLwtca}Party Limit").ToString();
       LeaderRosterText = new TextObject("{=PAIsBxGgiYZ}Leader Roster").ToString();
 
-      AllowTroopConversionToggle = new PartyAIOptionToggleVM(new TextObject("{=PAIhmt3dhI6}For Lords"), SubModule.PartySettingsManager.AllowTroopConversion, new TextObject("{=PAIlflf9B0n}Allows troop conversion for lord parties. This setting is no longer required to manage lord party troop composition. Use the recruitment order to make sure your parties recruit the troops you want."));
-      AllowTroopConversionForCaravansToggle = new PartyAIOptionToggleVM(new TextObject("{=PAIIraDmoi5}For Caravans"), SubModule.PartySettingsManager.AllowTroopConversionForCaravans, new TextObject("{=PAIr7ucbc6X}Allows troop conversion for caravans. At present this setting is necessary to manage caravan troop composition."));
-      AllowTroopConversionForGarrisonsToggle = new PartyAIOptionToggleVM(new TextObject("{=PAIxcNer6Hm}For Garrisons"), SubModule.PartySettingsManager.AllowTroopConversionForGarrisons, new TextObject("{=PAIc99C3VmP}Allows troop conversion for garrisons. At present this setting is necessary to manage garrison troop composition."), OnChangeAllowTroopConversion);
-      ManageClanGarrisonsToggle = new PartyAIOptionToggleVM(new TextObject("{=PAIFQeuWjXA}Clan Garrisons"), SubModule.PartySettingsManager.ManageClanGarrisons, _manageClanGarrisonsHint);
-      ManageCaravansToggle = new PartyAIOptionToggleVM(new TextObject("{=PAI68ZMWYZS}Caravans"), SubModule.PartySettingsManager.ManageCaravans, new TextObject("{=PAIlZXTnEd8}Manage caravans for your clan. Caravan settings are saved separately from regular party settings, so you can have heroes with both. In order to manage their troops properly, the mod needs to have troop conversion enabled for caravans."));
-      ManageKingdomPartiesToggle = new PartyAIOptionToggleVM(new TextObject("{=PAIeJ3goSqx}Kingdom Parties"), SubModule.PartySettingsManager.ManageKingdomParties, new TextObject("{=PAI8l5Lt9g3}If you are the ruler of your kingdom, manage parties for the entire kingdom instead of just your clan."));
-      ManageKingdomGarrisonsToggle = new PartyAIOptionToggleVM(new TextObject("{=PAIGJEcA4MB}Kingdom Garrisons"), SubModule.PartySettingsManager.ManageKingdomGarrisons, _manageKingdomGarrisonsHint);
-      AggressivePatrolsToggle = new PartyAIOptionToggleVM(new TextObject("{=PAI9BPfqnUx}Aggressive Patrols"), SubModule.PartySettingsManager.AggressivePatrols, new TextObject("{=PAIFxvrVYlD}If enabled, all AI patrols will attack any parties that come in range if they can catch them. Amends the 'Patrolling around X' AI behavior to include searching for targets--normally they wander aimlessly and don't attack anything. This is applied across the board, so you may not want to enable it until you're in the vassal/kingdom stage so there'll be more bandits."));
-      AIRecruitCultureToggle = new PartyAIOptionToggleVM(new TextObject("{=PAIJugGVraS}AI Recruit Culture"), SubModule.PartySettingsManager.AggressivePatrols, new TextObject("{=PAIJZdGLEmg}TODO"));
-      AutoCreateClanPartiesToggle = new PartyAIOptionToggleVM(new TextObject("{=PAIsUcGJNnV}Auto Create Clan Parties"), SubModule.PartySettingsManager.AutoCreateClanParties, new TextObject("{=PAIurMNhxmp}Automatically create clan parties for heroes that are available. Parties will not be created for heroes that are in your party."));
+      AllowTroopConversionToggle = new PartyAIOptionToggleVM(new TextObject("{=PAIhmt3dhI6}For Lords"), SubModule.PartyAIClanPartySettingsManager.AllowTroopConversion, new TextObject("{=PAIlflf9B0n}Allows troop conversion for lord parties. This setting is no longer required to manage lord party troop composition. Use the recruitment order to make sure your parties recruit the troops you want."));
+      AllowTroopConversionForCaravansToggle = new PartyAIOptionToggleVM(new TextObject("{=PAIIraDmoi5}For Caravans"), SubModule.PartyAIClanPartySettingsManager.AllowTroopConversionForCaravans, new TextObject("{=PAIr7ucbc6X}Allows troop conversion for caravans. At present this setting is necessary to manage caravan troop composition."));
+      AllowTroopConversionForGarrisonsToggle = new PartyAIOptionToggleVM(new TextObject("{=PAIxcNer6Hm}For Garrisons"), SubModule.PartyAIClanPartySettingsManager.AllowTroopConversionForGarrisons, new TextObject("{=PAIc99C3VmP}Allows troop conversion for garrisons. At present this setting is necessary to manage garrison troop composition."), OnChangeAllowTroopConversion);
+      ManageClanGarrisonsToggle = new PartyAIOptionToggleVM(new TextObject("{=PAIFQeuWjXA}Clan Garrisons"), SubModule.PartyAIClanPartySettingsManager.ManageClanGarrisons, _manageClanGarrisonsHint);
+      ManageCaravansToggle = new PartyAIOptionToggleVM(new TextObject("{=PAI68ZMWYZS}Caravans"), SubModule.PartyAIClanPartySettingsManager.ManageCaravans, new TextObject("{=PAIlZXTnEd8}Manage caravans for your clan. Caravan settings are saved separately from regular party settings, so you can have heroes with both. In order to manage their troops properly, the mod needs to have troop conversion enabled for caravans."));
+      ManageKingdomPartiesToggle = new PartyAIOptionToggleVM(new TextObject("{=PAIeJ3goSqx}Kingdom Parties"), SubModule.PartyAIClanPartySettingsManager.ManageKingdomParties, new TextObject("{=PAI8l5Lt9g3}If you are the ruler of your kingdom, manage parties for the entire kingdom instead of just your clan."));
+      ManageKingdomGarrisonsToggle = new PartyAIOptionToggleVM(new TextObject("{=PAIGJEcA4MB}Kingdom Garrisons"), SubModule.PartyAIClanPartySettingsManager.ManageKingdomGarrisons, _manageKingdomGarrisonsHint);
+      AggressivePatrolsToggle = new PartyAIOptionToggleVM(new TextObject("{=PAI9BPfqnUx}Aggressive Patrols"), SubModule.PartyAIClanPartySettingsManager.AggressivePatrols, new TextObject("{=PAIFxvrVYlD}If enabled, all AI patrols will attack any parties that come in range if they can catch them. Amends the 'Patrolling around X' AI behavior to include searching for targets--normally they wander aimlessly and don't attack anything. This is applied across the board, so you may not want to enable it until you're in the vassal/kingdom stage so there'll be more bandits."));
+      AIRecruitCultureToggle = new PartyAIOptionToggleVM(new TextObject("{=PAIJugGVraS}AI Recruit Culture"), SubModule.PartyAIClanPartySettingsManager.AggressivePatrols, new TextObject("{=PAIJZdGLEmg}TODO"));
+      AutoCreateClanPartiesToggle = new PartyAIOptionToggleVM(new TextObject("{=PAIsUcGJNnV}Auto Create Clan Parties"), SubModule.PartyAIClanPartySettingsManager.AutoCreateClanParties, new TextObject("{=PAIurMNhxmp}Automatically create clan parties for heroes that are available. Parties will not be created for heroes that are in your party."));
 
-      ControlPanelKeySelector = new(SubModule.PartySettingsManager.ControlPanelModiferKey, SubModule.PartySettingsManager.ControlPanelKey, true);
-      CommandedPartiesKeySelector = new(SubModule.PartySettingsManager.CommandedPartiesModiferKey, SubModule.PartySettingsManager.CommandedPartiesKey, true);
-      CommandPartiesKeySelector = new(TaleWorlds.InputSystem.InputKey.Invalid, SubModule.PartySettingsManager.CommandPartiesKey, false);
+      ControlPanelKeySelector = new(SubModule.PartyAIClanPartySettingsManager.ControlPanelModiferKey, SubModule.PartyAIClanPartySettingsManager.ControlPanelKey, true);
+      CommandedPartiesKeySelector = new(SubModule.PartyAIClanPartySettingsManager.CommandedPartiesModiferKey, SubModule.PartyAIClanPartySettingsManager.CommandedPartiesKey, true);
+      CommandPartiesKeySelector = new(TaleWorlds.InputSystem.InputKey.Invalid, SubModule.PartyAIClanPartySettingsManager.CommandPartiesKey, false);
 
       ControlPanelKeySelectorHint = new HintViewModel(new("{=PAIQNbMherW}Keybind to open this control panel. If you lock yourself out with a broken key combo, use partyai.open in the console to get back here and fix it."));
       CommandedPartiesKeySelectorHint = new HintViewModel(new("{=PAIdjKjbD9Y}Keybind to choose which parties to directly command. Press ALT+X (default) to choose nearby parties, then hold ALT (default) to order them around."));
@@ -74,7 +74,7 @@ namespace PartyAIControls.ViewModels
 
       AutoCreateClanPartiesMaxController = new PartyAIMaxPartiesDropdownVM(null);
 
-      ChosenPartyLeaders = SubModule.PartySettingsManager.AutoCreateClanPartiesRoster.ToList();
+      ChosenPartyLeaders = SubModule.PartyAIClanPartySettingsManager.AutoCreateClanPartiesRoster.ToList();
       LeaderRoster = new MBBindingList<PartyAIPartyLeaderRosterImageVM>();
       foreach (Hero h in ChosenPartyLeaders)
       {
@@ -83,7 +83,7 @@ namespace PartyAIControls.ViewModels
       LeaderRosterHiddenText = _hiddenLeadersCount > 0 ? "+" + _hiddenLeadersCount.ToString() : string.Empty;
       LeaderRosterHiddenHint = new HintViewModel(new TextObject("{=!}" + _hiddenLeadersHint));
 
-      _troopsConvertedPerDay = SubModule.PartySettingsManager.TroopsConvertedPerDay;
+      _troopsConvertedPerDay = SubModule.PartyAIClanPartySettingsManager.TroopsConvertedPerDay;
 
       if (AccessTools.TypeByName("ROT.SubModule") != null)
       {
@@ -276,35 +276,35 @@ namespace PartyAIControls.ViewModels
 
     public void AcceptEditModOptions()
     {
-      SubModule.PartySettingsManager.AllowTroopConversion = AllowTroopConversionToggle.IsSelected;
-      SubModule.PartySettingsManager.AllowTroopConversionForCaravans = AllowTroopConversionForCaravansToggle.IsSelected;
-      SubModule.PartySettingsManager.AllowTroopConversionForGarrisons = AllowTroopConversionForGarrisonsToggle.IsSelected;
-      SubModule.PartySettingsManager.ManageClanGarrisons = ManageClanGarrisonsToggle.IsSelected;
-      SubModule.PartySettingsManager.ManageCaravans = ManageCaravansToggle.IsSelected;
-      SubModule.PartySettingsManager.ManageKingdomParties = ManageKingdomPartiesToggle.IsSelected;
-      SubModule.PartySettingsManager.ManageKingdomGarrisons = ManageKingdomGarrisonsToggle.IsSelected;
-      SubModule.PartySettingsManager.AggressivePatrols = AggressivePatrolsToggle.IsSelected;
-      SubModule.PartySettingsManager.AIRecruitCulture = AIRecruitCultureToggle.IsSelected;
-      SubModule.PartySettingsManager.AutoCreateClanParties = AutoCreateClanPartiesToggle.IsSelected;
-      SubModule.PartySettingsManager.AutoCreateClanPartiesMax = AutoCreateClanPartiesMaxController.SortOptions.SelectedItem.Max;
-      SubModule.PartySettingsManager.AutoCreateClanPartiesRoster = ChosenPartyLeaders.ToList();
-      SubModule.PartySettingsManager.TroopsConvertedPerDay = _troopsConvertedPerDay;
+      SubModule.PartyAIClanPartySettingsManager.AllowTroopConversion = AllowTroopConversionToggle.IsSelected;
+      SubModule.PartyAIClanPartySettingsManager.AllowTroopConversionForCaravans = AllowTroopConversionForCaravansToggle.IsSelected;
+      SubModule.PartyAIClanPartySettingsManager.AllowTroopConversionForGarrisons = AllowTroopConversionForGarrisonsToggle.IsSelected;
+      SubModule.PartyAIClanPartySettingsManager.ManageClanGarrisons = ManageClanGarrisonsToggle.IsSelected;
+      SubModule.PartyAIClanPartySettingsManager.ManageCaravans = ManageCaravansToggle.IsSelected;
+      SubModule.PartyAIClanPartySettingsManager.ManageKingdomParties = ManageKingdomPartiesToggle.IsSelected;
+      SubModule.PartyAIClanPartySettingsManager.ManageKingdomGarrisons = ManageKingdomGarrisonsToggle.IsSelected;
+      SubModule.PartyAIClanPartySettingsManager.AggressivePatrols = AggressivePatrolsToggle.IsSelected;
+      SubModule.PartyAIClanPartySettingsManager.AIRecruitCulture = AIRecruitCultureToggle.IsSelected;
+      SubModule.PartyAIClanPartySettingsManager.AutoCreateClanParties = AutoCreateClanPartiesToggle.IsSelected;
+      SubModule.PartyAIClanPartySettingsManager.AutoCreateClanPartiesMax = AutoCreateClanPartiesMaxController.SortOptions.SelectedItem.Max;
+      SubModule.PartyAIClanPartySettingsManager.AutoCreateClanPartiesRoster = ChosenPartyLeaders.ToList();
+      SubModule.PartyAIClanPartySettingsManager.TroopsConvertedPerDay = _troopsConvertedPerDay;
 
-      if (SubModule.PartySettingsManager.ControlPanelModiferKey != ControlPanelKeySelector.ModifierKey || SubModule.PartySettingsManager.ControlPanelKey != ControlPanelKeySelector.Key)
+      if (SubModule.PartyAIClanPartySettingsManager.ControlPanelModiferKey != ControlPanelKeySelector.ModifierKey || SubModule.PartyAIClanPartySettingsManager.ControlPanelKey != ControlPanelKeySelector.Key)
       {
         InformationManager.DisplayMessage(new(new TextObject("{=PAIDWLDk2e4}PartyAIControls: You've changed your control panel keybind. If you've accidentally locked yourself out, run partyai.open in the console to get back into the control panel.").ToString(), Colors.Green));
       }
 
-      SubModule.PartySettingsManager.ControlPanelModiferKey = ControlPanelKeySelector.ModifierKey;
-      SubModule.PartySettingsManager.ControlPanelKey = ControlPanelKeySelector.Key;
-      SubModule.PartySettingsManager.CommandedPartiesModiferKey = CommandedPartiesKeySelector.ModifierKey;
-      SubModule.PartySettingsManager.CommandedPartiesKey = CommandedPartiesKeySelector.Key;
-      SubModule.PartySettingsManager.CommandPartiesKey = CommandPartiesKeySelector.Key;
+      SubModule.PartyAIClanPartySettingsManager.ControlPanelModiferKey = ControlPanelKeySelector.ModifierKey;
+      SubModule.PartyAIClanPartySettingsManager.ControlPanelKey = ControlPanelKeySelector.Key;
+      SubModule.PartyAIClanPartySettingsManager.CommandedPartiesModiferKey = CommandedPartiesKeySelector.ModifierKey;
+      SubModule.PartyAIClanPartySettingsManager.CommandedPartiesKey = CommandedPartiesKeySelector.Key;
+      SubModule.PartyAIClanPartySettingsManager.CommandPartiesKey = CommandPartiesKeySelector.Key;
 
       // disable dismissing troops for all parties
       if (AllowTroopConversionToggle.IsSelected)
       {
-        foreach (PartyAIClanPartySettings settings in SubModule.PartySettingsManager.AllPartySettings)
+        foreach (PartyAIClanPartySettings settings in SubModule.PartyAIClanPartySettingsManager.AllPartySettings)
         {
           settings.DismissUnwantedTroops = false;
         }

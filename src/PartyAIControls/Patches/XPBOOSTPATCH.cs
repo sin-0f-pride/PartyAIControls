@@ -1,4 +1,4 @@
-﻿namespace PartyAIControls.HarmonyPatches
+﻿namespace PartyAIControls.Patches
 {
     /*internal class PartyUpgraderCampaignBehaviorPatches
   {

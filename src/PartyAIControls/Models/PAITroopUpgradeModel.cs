@@ -1,4 +1,4 @@
-﻿using PartyAIControls.CampaignBehaviors;
+﻿using PartyAIControls.Behaviors;
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
@@ -50,12 +50,12 @@ namespace PartyAIControls.Models
             if (party.MobileParty == null) return _previousModel.GetUpgradeChanceForTroopUpgrade(party, troop, upgradeTargetIndex);
             if (party.MobileParty.IsGarrison)
             {
-                if (!SubModule.PartySettingsManager.IsGarrisonManageable(party.MobileParty.CurrentSettlement))
+                if (!SubModule.PartyAIClanPartySettingsManager.IsGarrisonManageable(party.MobileParty.CurrentSettlement))
                 {
                     return _previousModel.GetUpgradeChanceForTroopUpgrade(party, troop, upgradeTargetIndex);
                 }
             }
-            else if (!SubModule.PartySettingsManager.IsManageable(party.LeaderHero))
+            else if (!SubModule.PartyAIClanPartySettingsManager.IsManageable(party.LeaderHero))
             {
                 return _previousModel.GetUpgradeChanceForTroopUpgrade(party, troop, upgradeTargetIndex);
             }
@@ -68,18 +68,18 @@ namespace PartyAIControls.Models
             PartyAIClanPartySettings heroSettings;
             if (party.MobileParty.IsGarrison)
             {
-                heroSettings = SubModule.PartySettingsManager.Settings(party.MobileParty.CurrentSettlement);
+                heroSettings = SubModule.PartyAIClanPartySettingsManager.Settings(party.MobileParty.CurrentSettlement);
             }
             else
             {
-                heroSettings = SubModule.PartySettingsManager.Settings(party.LeaderHero);
+                heroSettings = SubModule.PartyAIClanPartySettingsManager.Settings(party.LeaderHero);
             }
-            PartyCompositionObect comp = SubModule.PartyTroopRecruiter.GetPartyComposition(party, heroSettings, troop);
-            PartyAITroopRecruiter recruiter = SubModule.PartyTroopRecruiter;
+            PartyCompositionObect comp = SubModule.PartyAITroopRecruiter.GetPartyComposition(party, heroSettings, troop);
+            PartyAITroopRecruiter recruiter = SubModule.PartyAITroopRecruiter;
 
             if (heroSettings.MaxTroopTier > 0 && troop.Tier >= heroSettings.MaxTroopTier) { return 0f; }
 
-            if (SubModule.PartyTroopRecruiter.ShouldRecruit(comp, heroSettings, troop.UpgradeTargets[upgradeTargetIndex], party))
+            if (SubModule.PartyAITroopRecruiter.ShouldRecruit(comp, heroSettings, troop.UpgradeTargets[upgradeTargetIndex], party))
             {
                 return 1f;
             }
@@ -91,7 +91,7 @@ namespace PartyAIControls.Models
                     continue;
                 }
 
-                if (SubModule.PartyTroopRecruiter.ShouldRecruit(comp, heroSettings, troop.UpgradeTargets[i], party))
+                if (SubModule.PartyAITroopRecruiter.ShouldRecruit(comp, heroSettings, troop.UpgradeTargets[i], party))
                 {
                     return 0f;
                 }
@@ -122,12 +122,12 @@ namespace PartyAIControls.Models
             if (!result || party.MobileParty == null) return result;
             if (party.MobileParty.IsGarrison)
             {
-                if (!SubModule.PartySettingsManager.IsGarrisonManageable(party.MobileParty.CurrentSettlement))
+                if (!SubModule.PartyAIClanPartySettingsManager.IsGarrisonManageable(party.MobileParty.CurrentSettlement))
                 {
                     return result;
                 }
             }
-            else if (!SubModule.PartySettingsManager.IsManageable(party.LeaderHero))
+            else if (!SubModule.PartyAIClanPartySettingsManager.IsManageable(party.LeaderHero))
             {
                 return result;
             }

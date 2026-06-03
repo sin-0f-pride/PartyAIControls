@@ -49,7 +49,7 @@ namespace PartyAIControls.ViewModels.MenuItemVMs
       RefreshValues();
     }
 
-    internal virtual PartyAIClanPartySettings Settings => SubModule.PartySettingsManager.Settings(Leader);
+    internal virtual PartyAIClanPartySettings Settings => SubModule.PartyAIClanPartySettingsManager.Settings(Leader);
 
     [DataSourceProperty] public virtual string LeaderName => Leader.Name.ToString();
     [DataSourceProperty] public virtual bool ShowPortrait => true;
@@ -67,7 +67,7 @@ namespace PartyAIControls.ViewModels.MenuItemVMs
     [DataSourceProperty] public bool AllowEditComposition { get; set; }
     [DataSourceProperty] public bool AllowEditTemplate { get; set; }
     [DataSourceProperty] public HintViewModel ShowOnMapHint => new(new TextObject("{=aGJYQOef}Show hero's location on map."));
-    [DataSourceProperty] public virtual string ActiveOrder => SubModule.PartySettingsManager.GetOrderText(Leader)?.ToString();
+    [DataSourceProperty] public virtual string ActiveOrder => SubModule.PartyAIClanPartySettingsManager.GetOrderText(Leader)?.ToString();
     [DataSourceProperty] public PartyAIOptionToggleVM CopyPasteToggle { get; set; }
 
     [DataSourceProperty]
@@ -134,9 +134,9 @@ namespace PartyAIControls.ViewModels.MenuItemVMs
       }
     }
 
-    public void EditPartyComposition() => SubModule.InformationManager.ShowPartyCompositionInquiry(Settings, EditPartyCompositionCallback);
+    public void EditPartyComposition() => SubModule.PACInformationManager.ShowPartyCompositionInquiry(Settings, EditPartyCompositionCallback);
 
-    public virtual void EditPartyOptions() => SubModule.InformationManager.ShowPartyOptionsInquiry(Settings, RefreshValues);
+    public virtual void EditPartyOptions() => SubModule.PACInformationManager.ShowPartyOptionsInquiry(Settings, RefreshValues);
 
     public void EditPartyTemplate()
     {
@@ -149,7 +149,7 @@ namespace PartyAIControls.ViewModels.MenuItemVMs
 
     public void OpenOrderQueue()
     {
-      SubModule.InformationManager.ShowOrderQueueInquiry(Settings, RefreshValues);
+      SubModule.PACInformationManager.ShowOrderQueueInquiry(Settings, RefreshValues);
     }
 
     private void EditPartyCompositionCallback(PartyCompositionObect composition)

@@ -4,7 +4,7 @@ using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 
-namespace PartyAIControls.HarmonyPatches
+namespace PartyAIControls.Patches
 {
     [HarmonyPatch]
     internal class CaravansCampaignBehaviorPatches
@@ -13,9 +13,9 @@ namespace PartyAIControls.HarmonyPatches
         [HarmonyPatch(typeof(CaravansCampaignBehavior), "GetTradeScoreForTown")]
         private static void Postfix(ref float __result, MobileParty caravanParty, Town town, CampaignTime lastHomeVisitTimeOfCaravan, float caravanFullness, bool distanceCut)
         {
-            if (!SubModule.PartySettingsManager.IsCaravanManageable(caravanParty.LeaderHero)) { return; }
+            if (!SubModule.PartyAIClanPartySettingsManager.IsCaravanManageable(caravanParty.LeaderHero)) { return; }
 
-            PartyAIClanPartySettings settings = SubModule.PartySettingsManager.Settings(caravanParty.LeaderHero);
+            PartyAIClanPartySettings settings = SubModule.PartyAIClanPartySettingsManager.Settings(caravanParty.LeaderHero);
             if (!settings.FilterSettlements || settings.FilteredSettlements?.Count < 2)
             {
                 return;

@@ -1,5 +1,4 @@
-﻿using PartyAIControls.ViewModels.Misc;
-using System;
+﻿using System;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Core;
@@ -33,7 +32,7 @@ namespace PartyAIControls.ViewModels.Dialogs
         return new Tuple<bool, string>(false, new TextObject("{=PAbGk5vWaqM}Maximum {MAX} characters").SetTextVariable("MAX", maximum).ToString());
       }
 
-      if (!SubModule.PartySettingsManager.IsUniqueTemplateName(name))
+      if (!SubModule.PartyAIClanPartySettingsManager.IsUniqueTemplateName(name))
       {
         return new Tuple<bool, string>(false, new TextObject("{=PAuu16DcbWX}There is already a template with that name.").ToString());
       }
@@ -47,7 +46,7 @@ namespace PartyAIControls.ViewModels.Dialogs
       TextObject leftPartyName = new("{=PAirAdxXSc5}Eligible Troops");
       TextObject rightPartyName = new("{=PA3a9D3vJpb}Chosen Troops");
       TextObject header = new("{=PAH9JlPJqJC}Create New Template");
-      VMUtilities.OpenPartyScreen(SubModule.PartySettingsManager.GetAllTopTierTroops(), null, leftPartyName, rightPartyName, header, TemplateCreateDoneHandler);
+      VMUtilities.OpenPartyScreen(SubModule.PartyAIClanPartySettingsManager.GetAllTopTierTroops(), null, leftPartyName, rightPartyName, header, TemplateCreateDoneHandler);
     }
 
     private static bool TemplateCreateDoneHandler(TroopRoster leftMemberRoster, TroopRoster leftPrisonRoster, TroopRoster rightMemberRoster, TroopRoster rightPrisonRoster, FlattenedTroopRoster takenPrisonerRoster, FlattenedTroopRoster releasedPrisonerRoster, bool isForced, PartyBase leftParty = null, PartyBase rightParty = null)
