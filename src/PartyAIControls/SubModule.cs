@@ -1,17 +1,19 @@
 ﻿using Bannerlord.UIExtenderEx;
 using HarmonyLib;
 using PartyAIControls.CampaignBehaviors;
-using PartyAIControls.HarmonyPatches;
+using PartyAIControls.GauntletUI;
 using PartyAIControls.Models;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameState;
 using TaleWorlds.CampaignSystem.Party;
-using TaleWorlds.CampaignSystem.ViewModelCollection.ArmyManagement;
 using TaleWorlds.Core;
 using TaleWorlds.Core.ImageIdentifiers;
+using TaleWorlds.Engine;
 using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
@@ -21,48 +23,45 @@ namespace PartyAIControls
 {
     public class SubModule : MBSubModuleBase
     {
-        private Harmony _harmony = null;
-        private bool _harmonyRan = false;
-        private bool _UIExtenderRan = false;
-        private bool _isChoosePartiesPopupOpenAlready = false;
-        private static readonly bool _bannerKingsLoaded = AccessTools.TypeByName("BannerKings.Main") != null;
-
-        internal static PartyAIClanPartySettingsManager PartySettingsManager;
-        internal static PartyAITroopRecruiter PartyTroopRecruiter;
-        internal static PartyAIThinker PartyThinker;
+        internal static PartyAIThinker PartyAIThinker;
+        internal static PartyAIClanPartySettingsManager PartyAIClanPartySettingsManager;
+        internal static PartyAITroopRecruiter PartyAITroopRecruiter;
+        public static bool BannerKings = false;
+        private static bool IsPopupOpen = false;
         internal static PartyAIDetachmentManager DetatchmentManager;
-        internal static PAInformationManager InformationManager;
-        private UIExtender _extender;
+
+        internal static PACInformationManager PACInformationManager;
+
+        protected override void OnSubModuleLoad()
+        {
+            BannerKings = Utilities.GetModulesNames().Contains("BannerKings");
+
+            var extender = UIExtender.Create("PartyAIControls");
+            extender.Register(typeof(SubModule).Assembly);
+            extender.Enable();
+
+            var harmony = new Harmony("bannerlord.partyaicontrols.patches");
+            harmony.PatchAll();
+        }
+
+        protected override void OnBeforeInitialModuleScreenSetAsRoot()
+        {
+            base.OnBeforeInitialModuleScreenSetAsRoot();
+            InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=!}Party AI Controls loaded").ToString(), Color.FromUint(0x00E67E22)));
+        }
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
         {
-            if ((game.GameType is not Campaign))
+            if (gameStarterObject is CampaignGameStarter starter)
             {
-                return;
+                starter.AddBehavior(PartyAIThinker = new PartyAIThinker());
+                starter.AddBehavior(PartyAIClanPartySettingsManager = new PartyAIClanPartySettingsManager());
+                starter.AddBehavior(PartyAITroopRecruiter = new PartyAITroopRecruiter());
+                starter.AddModel(new PAITroopUpgradeModel(GetModel<PartyTroopUpgradeModel>(starter)));
+                starter.AddModel(new PAIPrisonerRecruitmentCalculationModel(GetModel<PrisonerRecruitmentCalculationModel>(starter)));
+                starter.AddModel(new PAISettlementGarrisonModel(GetModel<SettlementGarrisonModel>(starter)));
+                PACInformationManager = new PACInformationManager();
             }
-
-            CampaignGameStarter campaignGameStarter = (CampaignGameStarter)gameStarterObject;
-
-            PartySettingsManager = new PartyAIClanPartySettingsManager();
-            campaignGameStarter.AddBehavior(PartySettingsManager);
-
-            PartyTroopRecruiter = new PartyAITroopRecruiter();
-            campaignGameStarter.AddBehavior(PartyTroopRecruiter);
-
-            PartyThinker = new PartyAIThinker();
-            campaignGameStarter.AddBehavior(PartyThinker);
-
-            //DetatchmentManager = new();
-            //campaignGameStarter.AddBehavior(DetatchmentManager);
-
-            //campaignGameStarter.AddBehavior(new PartyAIFoodBuyer());
-
-            campaignGameStarter.AddModel(new PAITroopUpgradeModel(GetGameModel<PartyTroopUpgradeModel>(gameStarterObject)));
-            campaignGameStarter.AddModel(new PAIPrisonerRecruitmentCalculationModel(GetGameModel<PrisonerRecruitmentCalculationModel>(gameStarterObject)));
-            campaignGameStarter.AddModel(new PAISettlementGarrisonModel(GetGameModel<SettlementGarrisonModel>(gameStarterObject)));
-            campaignGameStarter.AddModel(new PAIPartyFoodBuyingModel(GetGameModel<PartyFoodBuyingModel>(gameStarterObject)));
-
-            InformationManager = new();
         }
 
         public override void OnGameInitializationFinished(Game game)
@@ -71,37 +70,27 @@ namespace PartyAIControls
             {
                 return;
             }
-
-            if (!_harmonyRan)
-            {
-                _harmony.PatchAll();
-                if (!_bannerKingsLoaded)
-                {
-                    _harmony.Patch(AccessTools.Method(typeof(ArmyManagementVM), "ExecuteDone"), postfix: new(typeof(ArmyManagementVMPatches.ExecuteDone), "Postfix"));
-                    _harmony.Patch(AccessTools.Method(typeof(ArmyManagementVM), "RefreshValues"), postfix: new(typeof(ArmyManagementVMPatches.Constructor), "Postfix"));
-                }
-                _harmonyRan = true;
-            }
-
+            /*
             ValidateGameModel(Campaign.Current.Models.PartyTroopUpgradeModel);
             ValidateGameModel(Campaign.Current.Models.ArmyManagementCalculationModel);
             ValidateGameModel(Campaign.Current.Models.PrisonerRecruitmentCalculationModel);
             ValidateGameModel(Campaign.Current.Models.SettlementGarrisonModel);
             ValidateGameModel(Campaign.Current.Models.PartyFoodBuyingModel);
-
-            string keycombo = PartySettingsManager.ControlPanelModiferKey.ToString() + "+" + PartySettingsManager.ControlPanelKey.ToString();
-            TaleWorlds.Library.InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=PAIEUwVpMPm}Thank you for using Party AI Controls! To access the configuration panel, press {KEYBIND}!").SetTextVariable("KEYBIND", keycombo).ToString(), Colors.Green));
+            // TODO: Make a savegame variable to only show this on the first start with the mod.
+            InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=PAIEUwVpMPm}Thank you for using Party AI Controls! To access the configuration panel, press {KEYBIND}!").SetTextVariable("KEYBIND", PartyAIClanPartySettingsManager.ControlPanelModiferKey.ToString() + "+" + PartyAIClanPartySettingsManager.ControlPanelKey.ToString()).ToString(), Colors.Green));
+            */
         }
 
+        /*
         private void ValidateGameModel(GameModel model)
         {
             if (model.GetType().Assembly == GetType().Assembly) { return; }
             if (!model.GetType().BaseType.IsAbstract)
             {
                 TextObject error = new("{=I2LlBDKr}Game Model Error: Please move " + GetType().Assembly.GetName().Name + " below " + model.GetType().Assembly.GetName().Name + " in your load order to ensure mod compatibility");
-                TaleWorlds.Library.InformationManager.DisplayMessage(new InformationMessage(error.ToString(), Colors.Red));
+                InformationManager.DisplayMessage(new InformationMessage(error.ToString(), Colors.Red));
             }
-        }
+        }*/
 
         protected override void OnApplicationTick(float dt)
         {
@@ -110,69 +99,68 @@ namespace PartyAIControls
                 return;
             }
 
-            if ((Input.IsKeyDown(PartySettingsManager.ControlPanelModiferKey) || PartySettingsManager.ControlPanelModiferKey == InputKey.Invalid) && Input.IsKeyDown(PartySettingsManager.ControlPanelKey))
+            if ((Input.IsKeyDown(PartyAIClanPartySettingsManager.ControlPanelModiferKey) || PartyAIClanPartySettingsManager.ControlPanelModiferKey == InputKey.Invalid) && Input.IsKeyDown(PartyAIClanPartySettingsManager.ControlPanelKey))
             {
                 GameStateManager.Current.PushState(GameStateManager.Current.CreateState<PartyAIControlsMenuState>());
                 return;
             }
 
-            if ((Input.IsKeyDown(PartySettingsManager.CommandedPartiesModiferKey) || PartySettingsManager.CommandedPartiesModiferKey == InputKey.Invalid) && Input.IsKeyDown(PartySettingsManager.CommandedPartiesKey))
+            if ((Input.IsKeyDown(PartyAIClanPartySettingsManager.CommandedPartiesModiferKey) || PartyAIClanPartySettingsManager.CommandedPartiesModiferKey == InputKey.Invalid) && Input.IsKeyDown(PartyAIClanPartySettingsManager.CommandedPartiesKey))
             {
-                if (_isChoosePartiesPopupOpenAlready) { return; }
+                if (IsPopupOpen) { return; }
                 CampaignTimeControlMode mode = Campaign.Current.TimeControlMode;
                 Campaign.Current.TimeControlMode = CampaignTimeControlMode.FastForwardStop;
                 string title = new TextObject("{=PAIFHytp3D7}Choose which parties to directly command").ToString();
                 string desc = new TextObject("{=PAIRzSgh49H}Parties must be manageable and in visual range to appear here.").ToString();
-                List<InquiryElement> list = MobileParty.AllLordParties.Where(m => PartySettingsManager.IsHeroManageable(m.LeaderHero) && m.Position.Distance(MobileParty.MainParty.Position) <= MobileParty.MainParty.SeeingRange).Where(m => m.Army == null || m.Army.LeaderParty == m).OrderByDescending(m => m.ActualClan.Equals(Clan.PlayerClan)).ThenBy(m => m.Name?.ToString()).ToList().ConvertAll(m => new InquiryElement(m, m.Name.ToString(), new CharacterImageIdentifier(CharacterCode.CreateFrom(m.LeaderHero?.CharacterObject))));
+                List<InquiryElement> list = MobileParty.AllLordParties.Where(m => PartyAIClanPartySettingsManager.IsHeroManageable(m.LeaderHero) && m.Position.Distance(MobileParty.MainParty.Position) <= MobileParty.MainParty.SeeingRange).Where(m => m.Army == null || m.Army.LeaderParty == m).OrderByDescending(m => m.ActualClan.Equals(Clan.PlayerClan)).ThenBy(m => m.Name?.ToString()).ToList().ConvertAll(m => new InquiryElement(m, m.Name.ToString(), new CharacterImageIdentifier(CharacterCode.CreateFrom(m.LeaderHero?.CharacterObject))));
 
-                MBInformationManager.ShowMultiSelectionInquiry(
-                  new(title, desc, list, isExitShown: true, minSelectableOptionCount: 0, maxSelectableOptionCount: list.Count, GameTexts.FindText("str_done").ToString(), GameTexts.FindText("str_cancel").ToString(),
-                    affirmativeAction: (List<InquiryElement> results) =>
+                MBInformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(title, desc, list, true, minSelectableOptionCount: 0, maxSelectableOptionCount: list.Count, GameTexts.FindText("str_done").ToString(), GameTexts.FindText("str_cancel").ToString(),
+                    (List<InquiryElement> results) =>
                     {
-                        PartyThinker.ClearAssumingDirectControl();
+                        PartyAIThinker.ClearAssumingDirectControl();
                         foreach (InquiryElement e in results)
                         {
                             if (e.Identifier is MobileParty m)
                             {
-                                PartyThinker.AddToAssumingDirectControl(m);
+                                PartyAIThinker.AddToAssumingDirectControl(m);
                             }
                         }
-                        _isChoosePartiesPopupOpenAlready = false;
+                        IsPopupOpen = false;
                         Campaign.Current.TimeControlMode = mode;
-                    },
-                    (List<InquiryElement> results) =>
+                    }, (List<InquiryElement> results) =>
                     {
-                        _isChoosePartiesPopupOpenAlready = false;
+                        IsPopupOpen = false;
                         Campaign.Current.TimeControlMode = mode;
-                    }, isSeachAvailable: true
-                  )
+                    }, isSeachAvailable: true)
                 );
-                _isChoosePartiesPopupOpenAlready = true;
+                IsPopupOpen = true;
             }
         }
 
-        protected override void OnSubModuleLoad()
+        private T GetModel<T>(CampaignGameStarter starter) where T : GameModel
         {
-            _harmony ??= new Harmony("carbon.partyaicontrols");
-
-            if (!_UIExtenderRan)
+            foreach (GameModel mode in starter.Models)
             {
-                _extender = new UIExtender("PartyAIControls");
-                _extender.Register(typeof(SubModule).Assembly);
-                _extender.Enable();
-                _UIExtenderRan = true;
-            }
-        }
-
-        private T GetGameModel<T>(IGameStarter gameStarterObject) where T : GameModel
-        {
-            GameModel[] array = gameStarterObject.Models.ToArray();
-            for (int index = array.Length - 1; index >= 0; --index)
-            {
-                if (array[index] is T gameModel)
+                if (mode is T gameModel)
+                {
                     return gameModel;
+                }
             }
-            return default(T);
+            return default!;
+        }
+
+        public static void Log(string message)
+        {
+            string text = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Mount and Blade II Bannerlord", "Logs");
+            if (!Directory.Exists(text))
+            {
+                Directory.CreateDirectory(text);
+            }
+            string path = System.IO.Path.Combine(text, "PartyAIControls.txt");
+            using (StreamWriter streamWriter = new StreamWriter(path, true))
+            {
+                streamWriter.WriteLine("[" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "] " + message);
+            }
         }
     }
 }

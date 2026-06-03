@@ -11,12 +11,12 @@ namespace PartyAIControls.HarmonyPatches
   {
     private static void Postfix(MobileParty mobileParty, PartyThinkParams p)
     {
-      if (!SubModule.PartySettingsManager.IsHeroManageable(mobileParty.LeaderHero))
+      if (!SubModule.PartyAIClanPartySettingsManager.IsHeroManageable(mobileParty.LeaderHero))
       {
         return;
       }
 
-      PartyAIClanPartySettings heroSettings = SubModule.PartySettingsManager.Settings(mobileParty.LeaderHero);
+      PartyAIClanPartySettings heroSettings = SubModule.PartyAIClanPartySettingsManager.Settings(mobileParty.LeaderHero);
 
       if (heroSettings.AllowRaidVillages && heroSettings.AllowSieging)
       {

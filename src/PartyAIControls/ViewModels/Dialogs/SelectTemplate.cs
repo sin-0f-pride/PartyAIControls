@@ -29,7 +29,7 @@ namespace PartyAIControls.ViewModels.Dialogs
         title = new TextObject("{=PAI9HyjJ7ss}Select a new template").ToString();
       }
 
-      List<InquiryElement> list = SubModule.PartySettingsManager.AllTemplates.OrderBy(t => t.Name).ToList().ConvertAll(t =>
+      List<InquiryElement> list = SubModule.PartyAIClanPartySettingsManager.AllTemplates.OrderBy(t => t.Name).ToList().ConvertAll(t =>
         new InquiryElement(t, t.Name, new CharacterImageIdentifier(CampaignUIHelper.GetCharacterCode(t.Troops.First())))
       );
 

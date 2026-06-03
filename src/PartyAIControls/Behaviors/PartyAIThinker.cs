@@ -65,12 +65,12 @@ namespace PartyAIControls.CampaignBehaviors
 
         private void OnSettlementEntered(MobileParty party, Settlement settlement, Hero hero)
         {
-            if (!SubModule.PartySettingsManager.IsHeroManageable(party?.LeaderHero))
+            if (!SubModule.PartyAIClanPartySettingsManager.IsHeroManageable(party?.LeaderHero))
             {
                 return;
             }
 
-            PartyAIClanPartySettings settings = SubModule.PartySettingsManager.Settings(party.LeaderHero);
+            PartyAIClanPartySettings settings = SubModule.PartyAIClanPartySettingsManager.Settings(party.LeaderHero);
             if (settings.HasActiveOrder && (settings.Order.Behavior == OrderType.RecruitFromTemplate || settings.Order.Behavior == OrderType.VisitSettlement))
             {
                 if (settlement == settings.Order.Target)
@@ -89,12 +89,12 @@ namespace PartyAIControls.CampaignBehaviors
 
         private void ImplementAutoCreateClanParties()
         {
-            if (!SubModule.PartySettingsManager.AutoCreateClanParties)
+            if (!SubModule.PartyAIClanPartySettingsManager.AutoCreateClanParties)
             {
                 return;
             }
 
-            if (SubModule.PartySettingsManager.AutoCreateClanPartiesMax > 0 && ActiveClanParties(Clan.PlayerClan).Count() >= SubModule.PartySettingsManager.AutoCreateClanPartiesMax)
+            if (SubModule.PartyAIClanPartySettingsManager.AutoCreateClanPartiesMax > 0 && ActiveClanParties(Clan.PlayerClan).Count() >= SubModule.PartyAIClanPartySettingsManager.AutoCreateClanPartiesMax)
             {
                 return;
             }
@@ -112,9 +112,9 @@ namespace PartyAIControls.CampaignBehaviors
                   h.IsActive && !h.IsReleased && !h.IsFugitive && !h.IsPrisoner && !h.IsChild && h != Hero.MainHero && h.CanLeadParty() && !h.IsPartyLeader && h.GovernorOf == null && h.PartyBelongedTo == null && (!h.CurrentSettlement?.IsUnderSiege ?? true)
                 );
 
-                if (SubModule.PartySettingsManager.AutoCreateClanPartiesRoster.Count > 0)
+                if (SubModule.PartyAIClanPartySettingsManager.AutoCreateClanPartiesRoster.Count > 0)
                 {
-                    eligibleLeaders = eligibleLeaders.Where(h => SubModule.PartySettingsManager.AutoCreateClanPartiesRoster.Contains(h));
+                    eligibleLeaders = eligibleLeaders.Where(h => SubModule.PartyAIClanPartySettingsManager.AutoCreateClanPartiesRoster.Contains(h));
                 }
 
                 if (eligibleLeaders.Count() == 0)
@@ -127,7 +127,7 @@ namespace PartyAIControls.CampaignBehaviors
                 MobilePartyHelper.CreateNewClanMobileParty(leader, Clan.PlayerClan);
                 InformationManager.DisplayMessage(new InformationMessage(new TextObject("{=PAIJPxU5978}{HERO} has created a new party near {SETTLEMENT}").SetTextVariable("HERO", leader.Name).SetTextVariable("SETTLEMENT", settlement?.Name).ToString(), Colors.Gray));
 
-                if (SubModule.PartySettingsManager.AutoCreateClanPartiesMax > 0 && ActiveClanParties(Clan.PlayerClan).Count() >= SubModule.PartySettingsManager.AutoCreateClanPartiesMax)
+                if (SubModule.PartyAIClanPartySettingsManager.AutoCreateClanPartiesMax > 0 && ActiveClanParties(Clan.PlayerClan).Count() >= SubModule.PartyAIClanPartySettingsManager.AutoCreateClanPartiesMax)
                 {
                     break;
                 }
@@ -137,7 +137,7 @@ namespace PartyAIControls.CampaignBehaviors
         private void OnHourlyTickParty(MobileParty party)
         {
             if (party?.LeaderHero == null) { return; }
-            if (!SubModule.PartySettingsManager.IsHeroManageable(party.LeaderHero))
+            if (!SubModule.PartyAIClanPartySettingsManager.IsHeroManageable(party.LeaderHero))
             {
                 if (party.Ai.DoNotMakeNewDecisions && party.DefaultBehavior == AiBehavior.Hold && party.IsLordParty)
                 {
@@ -145,11 +145,11 @@ namespace PartyAIControls.CampaignBehaviors
                 }
                 return;
             }
-            else if (SubModule.PartyThinker.AssumingDirectControl.Contains(party) && !SubModule.PartySettingsManager.Settings(party.LeaderHero).HasActiveOrder)
+            else if (SubModule.PartyAIThinker.AssumingDirectControl.Contains(party) && !SubModule.PartyAIClanPartySettingsManager.Settings(party.LeaderHero).HasActiveOrder)
             {
                 if (party.DefaultBehavior == AiBehavior.Hold)
                 {
-                    SubModule.PartySettingsManager.Settings(party.LeaderHero).SetOrder(new(MainParty, OrderType.EscortParty));
+                    SubModule.PartyAIClanPartySettingsManager.Settings(party.LeaderHero).SetOrder(new(MainParty, OrderType.EscortParty));
                 }
             }
 
@@ -159,9 +159,9 @@ namespace PartyAIControls.CampaignBehaviors
                 PartiesBuyHorseCampaignBehaviorPatch.Prefix(party, party.CurrentSettlement, party.LeaderHero);
             }
 
-            PartyAIClanPartySettings settings = SubModule.PartySettingsManager.Settings(party.LeaderHero);
+            PartyAIClanPartySettings settings = SubModule.PartyAIClanPartySettingsManager.Settings(party.LeaderHero);
 
-            if (settings.AutoRecruitment && party.PartySizeRatio < settings.AutoRecruitmentPercentage && !SubModule.PartyThinker.AssumingDirectControl.Contains(party) && party.Army == null)
+            if (settings.AutoRecruitment && party.PartySizeRatio < settings.AutoRecruitmentPercentage && !SubModule.PartyAIThinker.AssumingDirectControl.Contains(party) && party.Army == null)
             {
                 if (settings.HasActiveOrder)
                 {
@@ -181,7 +181,7 @@ namespace PartyAIControls.CampaignBehaviors
                 int max = (int)((party.PartySizeRatio - settings.DismissUnwantedTroopsPercentage) * party.Party.PartySizeLimit);
                 if (max > 0)
                 {
-                    SubModule.PartyTroopRecruiter.DismissUnwantedTroops(settings, party, max);
+                    SubModule.PartyAITroopRecruiter.DismissUnwantedTroops(settings, party, max);
                 }
             }
 
@@ -232,7 +232,7 @@ namespace PartyAIControls.CampaignBehaviors
 
         private void OnSettlementOwnerChanged(Settlement settlement, bool openToClaim, Hero newOwner, Hero oldOwner, Hero capturerHero, ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail detail)
         {
-            foreach (PartyAIClanPartySettings settings in SubModule.PartySettingsManager.HeroesWithOrders)
+            foreach (PartyAIClanPartySettings settings in SubModule.PartyAIClanPartySettingsManager.HeroesWithOrders)
             {
                 if (settings.Order.Behavior == OrderType.BesiegeSettlement && settings.Order.Target == settlement)
                 {
@@ -246,9 +246,9 @@ namespace PartyAIControls.CampaignBehaviors
 
         private void OnHeroPrisonerTaken(PartyBase party, Hero prisoner)
         {
-            if (SubModule.PartySettingsManager.IsHeroManageable(prisoner))
+            if (SubModule.PartyAIClanPartySettingsManager.IsHeroManageable(prisoner))
             {
-                PartyAIClanPartySettings settings = SubModule.PartySettingsManager.Settings(prisoner);
+                PartyAIClanPartySettings settings = SubModule.PartyAIClanPartySettingsManager.Settings(prisoner);
                 settings.ClearOrder();
                 settings.OrderQueue.Clear();
             }
@@ -256,17 +256,17 @@ namespace PartyAIControls.CampaignBehaviors
 
         private void OnPartyJoinedArmy(MobileParty mobileParty)
         {
-            if (SubModule.PartySettingsManager.IsHeroManageable(mobileParty?.LeaderHero))
+            if (SubModule.PartyAIClanPartySettingsManager.IsHeroManageable(mobileParty?.LeaderHero))
             {
-                if (!SubModule.PartySettingsManager.HasActiveOrder(mobileParty.LeaderHero))
+                if (!SubModule.PartyAIClanPartySettingsManager.HasActiveOrder(mobileParty.LeaderHero))
                 {
                     return;
                 }
 
-                TextObject text = new TextObject("{=PAIOEWao2aI}{PARTY} is no longer {ORDER} because they were called to {ARMY}").SetTextVariable("PARTY", mobileParty.Name).SetTextVariable("ORDER", SubModule.PartySettingsManager.GetOrderText(mobileParty.LeaderHero)).SetTextVariable("ARMY", mobileParty.Army.Name);
+                TextObject text = new TextObject("{=PAIOEWao2aI}{PARTY} is no longer {ORDER} because they were called to {ARMY}").SetTextVariable("PARTY", mobileParty.Name).SetTextVariable("ORDER", SubModule.PartyAIClanPartySettingsManager.GetOrderText(mobileParty.LeaderHero)).SetTextVariable("ARMY", mobileParty.Army.Name);
                 InformationManager.DisplayMessage(new InformationMessage(text.ToString(), Colors.Magenta));
 
-                PartyAIClanPartySettings settings = SubModule.PartySettingsManager.Settings(mobileParty.LeaderHero);
+                PartyAIClanPartySettings settings = SubModule.PartyAIClanPartySettingsManager.Settings(mobileParty.LeaderHero);
                 settings.ClearOrder();
                 settings.OrderQueue.Clear();
             }
@@ -274,14 +274,14 @@ namespace PartyAIControls.CampaignBehaviors
 
         private void OnMobilePartyDestroyed(MobileParty mobileParty, PartyBase destroyerParty)
         {
-            if (SubModule.PartySettingsManager.IsHeroManageable(mobileParty?.LeaderHero))
+            if (SubModule.PartyAIClanPartySettingsManager.IsHeroManageable(mobileParty?.LeaderHero))
             {
-                PartyAIClanPartySettings settings = SubModule.PartySettingsManager.Settings(mobileParty.LeaderHero);
+                PartyAIClanPartySettings settings = SubModule.PartyAIClanPartySettingsManager.Settings(mobileParty.LeaderHero);
                 settings.ClearOrder();
                 settings.OrderQueue.Clear();
             }
 
-            foreach (PartyAIClanPartySettings settings in SubModule.PartySettingsManager.HeroesWithOrders)
+            foreach (PartyAIClanPartySettings settings in SubModule.PartyAIClanPartySettingsManager.HeroesWithOrders)
             {
                 PAICustomOrder order = settings.Order;
                 switch (order.Behavior)
@@ -293,7 +293,7 @@ namespace PartyAIControls.CampaignBehaviors
                             continue;
                         }
                         settings.ClearOrder();
-                        if (SubModule.PartyThinker.AssumingDirectControl.Contains(settings.Hero.PartyBelongedTo))
+                        if (SubModule.PartyAIThinker.AssumingDirectControl.Contains(settings.Hero.PartyBelongedTo))
                         {
                             settings.SetOrder(new(MainParty, OrderType.EscortParty));
                             SetPartyAiAction.GetActionForEscortingParty(mobileParty, MainParty, MainParty.NavigationCapability, false, MainParty.IsTargetingPort);
@@ -308,9 +308,9 @@ namespace PartyAIControls.CampaignBehaviors
 
         private void OnMobilePartyCreated(MobileParty mobileParty)
         {
-            if (SubModule.PartySettingsManager.IsHeroManageable(mobileParty?.LeaderHero))
+            if (SubModule.PartyAIClanPartySettingsManager.IsHeroManageable(mobileParty?.LeaderHero))
             {
-                PartyAIClanPartySettings settings = SubModule.PartySettingsManager.Settings(mobileParty.LeaderHero);
+                PartyAIClanPartySettings settings = SubModule.PartyAIClanPartySettingsManager.Settings(mobileParty.LeaderHero);
                 settings.ClearOrder();
                 settings.OrderQueue.Clear();
                 settings.ResetBudgets();
@@ -323,12 +323,12 @@ namespace PartyAIControls.CampaignBehaviors
 
         internal void ProcessOrder(MobileParty party, PartyThinkParams thinkParams)
         {
-            if (!SubModule.PartySettingsManager.IsHeroManageable(party.LeaderHero))
+            if (!SubModule.PartyAIClanPartySettingsManager.IsHeroManageable(party.LeaderHero))
             {
                 return;
             }
 
-            PartyAIClanPartySettings settings = SubModule.PartySettingsManager.Settings(party.LeaderHero);
+            PartyAIClanPartySettings settings = SubModule.PartyAIClanPartySettingsManager.Settings(party.LeaderHero);
             ImplementAllowRaidingVillages(party, thinkParams, settings);
             ImplementAllowJoiningArmies(party, thinkParams, settings);
             ImplementAllowBesieging(party, thinkParams, settings);
@@ -822,7 +822,7 @@ namespace PartyAIControls.CampaignBehaviors
 
         private void AbandonOrderForNoFood(MobileParty party, PartyAIClanPartySettings settings)
         {
-            TextObject text = new TextObject("{=PAIw38SHHlH}{PARTY} is no longer {ORDER} because their food supplies ran low.").SetTextVariable("PARTY", party.Name).SetTextVariable("ORDER", SubModule.PartySettingsManager.GetOrderText(party.LeaderHero));
+            TextObject text = new TextObject("{=PAIw38SHHlH}{PARTY} is no longer {ORDER} because their food supplies ran low.").SetTextVariable("PARTY", party.Name).SetTextVariable("ORDER", SubModule.PartyAIClanPartySettingsManager.GetOrderText(party.LeaderHero));
             InformationManager.DisplayMessage(new InformationMessage(text.ToString(), Colors.Magenta));
             settings.ClearOrder();
             ResetPartyAi(party);

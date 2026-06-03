@@ -17,12 +17,12 @@ namespace PartyAIControls.HarmonyPatches
         [HarmonyPatch(typeof(MobileParty), "SetMoveGoToPoint")]
         private static void SetMoveGoToPoint(MobileParty __instance, CampaignVec2 point)
         {
-            if (!Input.IsKeyDown(SubModule.PartySettingsManager.CommandPartiesKey) || __instance != MobileParty.MainParty) { return; }
+            if (!Input.IsKeyDown(SubModule.PartyAIClanPartySettingsManager.CommandPartiesKey) || __instance != MobileParty.MainParty) { return; }
 
-            foreach (MobileParty controlling in SubModule.PartyThinker.AssumingDirectControl)
+            foreach (MobileParty controlling in SubModule.PartyAIThinker.AssumingDirectControl)
             {
                 if (controlling?.LeaderHero == null) { continue; }
-                if (!SubModule.PartySettingsManager.IsHeroManageable(controlling.LeaderHero)) { continue; }
+                if (!SubModule.PartyAIClanPartySettingsManager.IsHeroManageable(controlling.LeaderHero)) { continue; }
                 if (controlling.MapEvent != null) { continue; }
                 if (controlling.Position.Distance(MobileParty.MainParty.Position) > MobileParty.MainParty.SeeingRange)
                 {
@@ -31,7 +31,7 @@ namespace PartyAIControls.HarmonyPatches
                 }
                 SetPartyAiAction.GetActionForEscortingParty(controlling, MobileParty.MainParty, controlling.NavigationCapability, false, controlling.IsTargetingPort);
                 controlling.Ai.SetDoNotMakeNewDecisions(true);
-                PartyAIClanPartySettings settings = SubModule.PartySettingsManager.Settings(controlling.LeaderHero);
+                PartyAIClanPartySettings settings = SubModule.PartyAIClanPartySettingsManager.Settings(controlling.LeaderHero);
                 settings.OrderQueue.Clear();
                 settings.ClearOrder();
                 settings.SetOrder(new(MobileParty.MainParty, OrderType.EscortParty));
@@ -42,12 +42,12 @@ namespace PartyAIControls.HarmonyPatches
         [HarmonyPatch(typeof(MobileParty), "SetMoveEngageParty")]
         private static void SetMoveEngageParty(MobilePartyAi __instance, MobileParty party)
         {
-            if (!Input.IsKeyDown(SubModule.PartySettingsManager.CommandPartiesKey) || __instance != MobileParty.MainParty.Ai) { return; }
+            if (!Input.IsKeyDown(SubModule.PartyAIClanPartySettingsManager.CommandPartiesKey) || __instance != MobileParty.MainParty.Ai) { return; }
 
-            foreach (MobileParty controlling in SubModule.PartyThinker.AssumingDirectControl)
+            foreach (MobileParty controlling in SubModule.PartyAIThinker.AssumingDirectControl)
             {
                 if (controlling?.LeaderHero == null) { continue; }
-                if (!SubModule.PartySettingsManager.IsHeroManageable(controlling.LeaderHero)) { continue; }
+                if (!SubModule.PartyAIClanPartySettingsManager.IsHeroManageable(controlling.LeaderHero)) { continue; }
                 if (controlling.MapEvent != null) { continue; }
                 if (controlling.Position.Distance(MobileParty.MainParty.Position) > MobileParty.MainParty.SeeingRange)
                 {
@@ -56,7 +56,7 @@ namespace PartyAIControls.HarmonyPatches
                 }
 
                 controlling.Ai.SetDoNotMakeNewDecisions(true);
-                PartyAIClanPartySettings settings = SubModule.PartySettingsManager.Settings(controlling.LeaderHero);
+                PartyAIClanPartySettings settings = SubModule.PartyAIClanPartySettingsManager.Settings(controlling.LeaderHero);
                 settings.OrderQueue.Clear();
                 settings.ClearOrder();
                 if (FactionManager.IsAtWarAgainstFaction(party.MapFaction, controlling.MapFaction))
@@ -80,12 +80,12 @@ namespace PartyAIControls.HarmonyPatches
         [HarmonyPatch(typeof(MobileParty), "SetMoveGoToSettlement")]
         private static void SetMoveGoToSettlement(MobilePartyAi __instance, Settlement settlement)
         {
-            if (!Input.IsKeyDown(SubModule.PartySettingsManager.CommandPartiesKey) || __instance != MobileParty.MainParty.Ai) { return; }
+            if (!Input.IsKeyDown(SubModule.PartyAIClanPartySettingsManager.CommandPartiesKey) || __instance != MobileParty.MainParty.Ai) { return; }
 
-            foreach (MobileParty controlling in SubModule.PartyThinker.AssumingDirectControl)
+            foreach (MobileParty controlling in SubModule.PartyAIThinker.AssumingDirectControl)
             {
                 if (controlling?.LeaderHero == null) { continue; }
-                if (!SubModule.PartySettingsManager.IsHeroManageable(controlling.LeaderHero)) { continue; }
+                if (!SubModule.PartyAIClanPartySettingsManager.IsHeroManageable(controlling.LeaderHero)) { continue; }
                 if (controlling.MapEvent != null) { continue; }
                 if (controlling.Position.Distance(MobileParty.MainParty.Position) > MobileParty.MainParty.SeeingRange)
                 {
@@ -94,7 +94,7 @@ namespace PartyAIControls.HarmonyPatches
                 }
 
                 controlling.Ai.SetDoNotMakeNewDecisions(true);
-                PartyAIClanPartySettings settings = SubModule.PartySettingsManager.Settings(controlling.LeaderHero);
+                PartyAIClanPartySettings settings = SubModule.PartyAIClanPartySettingsManager.Settings(controlling.LeaderHero);
                 settings.OrderQueue.Clear();
                 settings.ClearOrder();
                 if (FactionManager.IsAtWarAgainstFaction(settlement.MapFaction, controlling.MapFaction))

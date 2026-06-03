@@ -20,12 +20,12 @@ namespace PartyAIControls.Models
         {
             int result = _model.FindNumberOfTroopsToLeaveToGarrison(mobileParty, settlement);
 
-            if (!SubModule.PartySettingsManager.IsHeroManageable(mobileParty.LeaderHero))
+            if (!SubModule.PartyAIClanPartySettingsManager.IsHeroManageable(mobileParty.LeaderHero))
             {
                 return result;
             }
 
-            PartyAIClanPartySettings heroSettings = SubModule.PartySettingsManager.Settings(mobileParty.LeaderHero);
+            PartyAIClanPartySettings heroSettings = SubModule.PartyAIClanPartySettingsManager.Settings(mobileParty.LeaderHero);
 
             if (!heroSettings.AllowDonateTroops)
             {
@@ -39,12 +39,12 @@ namespace PartyAIControls.Models
         {
             int result = _model.FindNumberOfTroopsToTakeFromGarrison(mobileParty, settlement, idealGarrisonStrengthPerWalledCenter);
 
-            if (!SubModule.PartySettingsManager.IsHeroManageable(mobileParty.LeaderHero))
+            if (!SubModule.PartyAIClanPartySettingsManager.IsHeroManageable(mobileParty.LeaderHero))
             {
                 return result;
             }
 
-            PartyAIClanPartySettings heroSettings = SubModule.PartySettingsManager.Settings(mobileParty.LeaderHero);
+            PartyAIClanPartySettings heroSettings = SubModule.PartyAIClanPartySettingsManager.Settings(mobileParty.LeaderHero);
 
             if (!heroSettings.AllowTakeTroopsFromSettlement)
             {

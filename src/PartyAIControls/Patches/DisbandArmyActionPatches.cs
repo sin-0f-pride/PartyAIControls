@@ -10,7 +10,7 @@ namespace PartyAIControls.HarmonyPatches
     {
         private static bool Prefix(Army army)
         {
-            if (SubModule.PartySettingsManager.HasActiveOrder(army?.LeaderParty?.LeaderHero))
+            if (SubModule.PartyAIClanPartySettingsManager.HasActiveOrder(army?.LeaderParty?.LeaderHero))
             {
                 return false;
             }

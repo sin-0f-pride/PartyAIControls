@@ -113,9 +113,9 @@ namespace PartyAIControls.CampaignBehaviors
 
             if (settlement.IsUnderSiege || settlement.InRebelliousState) { return; }
 
-            if (!SubModule.PartySettingsManager.AllowTroopConversionForGarrisons || !SubModule.PartySettingsManager.IsGarrisonManageable(settlement)) { return; }
+            if (!SubModule.PartyAIClanPartySettingsManager.AllowTroopConversionForGarrisons || !SubModule.PartyAIClanPartySettingsManager.IsGarrisonManageable(settlement)) { return; }
 
-            PartyAIClanPartySettings settings = SubModule.PartySettingsManager.Settings(settlement);
+            PartyAIClanPartySettings settings = SubModule.PartyAIClanPartySettingsManager.Settings(settlement);
             if (settings.PartyTemplate == null)
             {
                 return;
@@ -126,13 +126,13 @@ namespace PartyAIControls.CampaignBehaviors
 
         private void DailyTickParty(MobileParty party)
         {
-            if ((!SubModule.PartySettingsManager.AllowTroopConversion || !SubModule.PartySettingsManager.IsManageable(party?.LeaderHero)) && !SubModule.PartySettingsManager.AllowCaravanConversion(party?.LeaderHero))
+            if ((!SubModule.PartyAIClanPartySettingsManager.AllowTroopConversion || !SubModule.PartyAIClanPartySettingsManager.IsManageable(party?.LeaderHero)) && !SubModule.PartyAIClanPartySettingsManager.AllowCaravanConversion(party?.LeaderHero))
             {
                 return;
             }
             if (party.MapEvent != null) { return; }
 
-            PartyAIClanPartySettings heroSettings = SubModule.PartySettingsManager.Settings(party.LeaderHero);
+            PartyAIClanPartySettings heroSettings = SubModule.PartyAIClanPartySettingsManager.Settings(party.LeaderHero);
             if (heroSettings.PartyTemplate == null)
             {
                 return;
@@ -143,12 +143,12 @@ namespace PartyAIControls.CampaignBehaviors
 
         private void OnLootDistributedToParty(PartyBase winnerParty, PartyBase loserParty, ItemRoster LootedItems)
         {
-            if ((!SubModule.PartySettingsManager.AllowTroopConversion || !SubModule.PartySettingsManager.IsManageable(winnerParty?.LeaderHero)) && !SubModule.PartySettingsManager.AllowCaravanConversion(winnerParty?.LeaderHero))
+            if ((!SubModule.PartyAIClanPartySettingsManager.AllowTroopConversion || !SubModule.PartyAIClanPartySettingsManager.IsManageable(winnerParty?.LeaderHero)) && !SubModule.PartyAIClanPartySettingsManager.AllowCaravanConversion(winnerParty?.LeaderHero))
             {
                 return;
             }
 
-            PartyAIClanPartySettings heroSettings = SubModule.PartySettingsManager.Settings(winnerParty.LeaderHero);
+            PartyAIClanPartySettings heroSettings = SubModule.PartyAIClanPartySettingsManager.Settings(winnerParty.LeaderHero);
             if (heroSettings.PartyTemplate == null)
             {
                 return;
@@ -159,14 +159,14 @@ namespace PartyAIControls.CampaignBehaviors
 
         private void OnTroopRecruited(Hero recruiter, Settlement settlement, Hero recruitmentSource, CharacterObject troop, int count)
         {
-            if (_firingEvent || (!SubModule.PartySettingsManager.AllowTroopConversion && !SubModule.PartySettingsManager.AllowCaravanConversion(recruiter)))
+            if (_firingEvent || (!SubModule.PartyAIClanPartySettingsManager.AllowTroopConversion && !SubModule.PartyAIClanPartySettingsManager.AllowCaravanConversion(recruiter)))
             {
                 return;
             }
 
-            if (SubModule.PartySettingsManager.IsManageable(recruiter))
+            if (SubModule.PartyAIClanPartySettingsManager.IsManageable(recruiter))
             {
-                PartyAIClanPartySettings heroSettings = SubModule.PartySettingsManager.Settings(recruiter);
+                PartyAIClanPartySettings heroSettings = SubModule.PartyAIClanPartySettingsManager.Settings(recruiter);
                 if (heroSettings.PartyTemplate != null && heroSettings.TroopsConvertibleToday > 0)
                 {
                     ExchangeClanTroops(recruiter, recruiter?.PartyBelongedTo?.MemberRoster, troop, count, true);
@@ -179,7 +179,7 @@ namespace PartyAIControls.CampaignBehaviors
         {
             if (owner?.PartyBelongedTo?.Party == null && settlement == null) { return; }
 
-            if (!SubModule.PartySettingsManager.IsManageable(owner) && !SubModule.PartySettingsManager.IsGarrisonManageable(settlement)) { return; }
+            if (!SubModule.PartyAIClanPartySettingsManager.IsManageable(owner) && !SubModule.PartyAIClanPartySettingsManager.IsGarrisonManageable(settlement)) { return; }
 
             if (roster == null || troop.IsHero || roster.GetTroopCount(troop) < count || count <= 0) { return; }
 
@@ -189,13 +189,13 @@ namespace PartyAIControls.CampaignBehaviors
             if (settlement != null)
             {
                 party = settlement.Town.GarrisonParty.Party;
-                heroSettings = SubModule.PartySettingsManager.Settings(settlement);
+                heroSettings = SubModule.PartyAIClanPartySettingsManager.Settings(settlement);
                 template = heroSettings.PartyTemplate;
             }
             else
             {
                 party = owner.PartyBelongedTo.Party;
-                heroSettings = SubModule.PartySettingsManager.Settings(owner);
+                heroSettings = SubModule.PartyAIClanPartySettingsManager.Settings(owner);
                 template = heroSettings.PartyTemplate;
             }
             if (template == null) { return; }
@@ -331,7 +331,7 @@ namespace PartyAIControls.CampaignBehaviors
 
             if (targets.Count() == 0 || OverMaxTier(troop, heroSettings.MaxTroopTier))
             {
-                //TaleWorlds.Library.InformationManager.DisplayMessage(new("Will not recruit "+troop.Name+" because it has no valid upgrade paths.",TaleWorlds.Library.Colors.Red));
+                //TaleWorlds.Library.PACInformationManager.DisplayMessage(new("Will not recruit "+troop.Name+" because it has no valid upgrade paths.",TaleWorlds.Library.Colors.Red));
                 return false;
             }
 
@@ -342,12 +342,12 @@ namespace PartyAIControls.CampaignBehaviors
 
                 if (need >= (mustBeOnePlus ? 1f : 0.4f))
                 {
-                    //TaleWorlds.Library.InformationManager.DisplayMessage(new("Will recruit " + troop.Name, TaleWorlds.Library.Colors.Green));
+                    //TaleWorlds.Library.PACInformationManager.DisplayMessage(new("Will recruit " + troop.Name, TaleWorlds.Library.Colors.Green));
                     return true;
                 }
             }
 
-            //TaleWorlds.Library.InformationManager.DisplayMessage(new("Will not recruit " + troop.Name+ " due to insufficient need.", TaleWorlds.Library.Colors.Red));
+            //TaleWorlds.Library.PACInformationManager.DisplayMessage(new("Will not recruit " + troop.Name+ " due to insufficient need.", TaleWorlds.Library.Colors.Red));
             return false;
         }
 
@@ -424,7 +424,7 @@ namespace PartyAIControls.CampaignBehaviors
 
             /*PartyCompositionObect comp2 = comp.Clone();
             comp2.Scale(100);
-            TaleWorlds.Library.InformationManager.DisplayMessage(new(party.Name.ToString() + " Comp: I:" + ((int)comp2.Infantry).ToString() + "%, R:" + ((int)comp2.Ranged).ToString() + "%, C:" + ((int)comp2.Cavalry).ToString() + "%, H:" + ((int)comp2.HorseArcher).ToString() + "%", TaleWorlds.Library.Colors.Blue));*/
+            TaleWorlds.Library.PACInformationManager.DisplayMessage(new(party.Name.ToString() + " Comp: I:" + ((int)comp2.Infantry).ToString() + "%, R:" + ((int)comp2.Ranged).ToString() + "%, C:" + ((int)comp2.Cavalry).ToString() + "%, H:" + ((int)comp2.HorseArcher).ToString() + "%", TaleWorlds.Library.Colors.Blue));*/
 
             return comp;
         }

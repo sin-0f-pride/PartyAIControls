@@ -20,7 +20,7 @@ namespace PartyAIControls.ViewModels.Dialogs
 
       string title = new TextObject("{=PAI0HrENRV2}Select which template to delete").ToString();
 
-      List<InquiryElement> list = SubModule.PartySettingsManager.AllTemplates.OrderBy(t => t.Name).ToList().ConvertAll(t =>
+      List<InquiryElement> list = SubModule.PartyAIClanPartySettingsManager.AllTemplates.OrderBy(t => t.Name).ToList().ConvertAll(t =>
         new InquiryElement(t, t.Name, new CharacterImageIdentifier(CampaignUIHelper.GetCharacterCode(t.Troops.First())))
       );
       MBInformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(title, string.Empty, list, isExitShown: true, 1, 1, new TextObject("{=PAIFofWXL3f}DELETE").ToString(), GameTexts.FindText("str_cancel").ToString(), DeletePartyTemplateCallback, null, "", true));
@@ -38,7 +38,7 @@ namespace PartyAIControls.ViewModels.Dialogs
       TextObject text = new TextObject("{=PAGIUuSgSnB}Are you sure you want to delete the template {TEMPLATE}?").SetTextVariable("TEMPLATE", template.Name);
       InformationManager.ShowInquiry(new InquiryData(new TextObject("{=PAR1D0VvXKZ}Delete Template").ToString(), text.ToString(), true, true, new TextObject("{=Y94H6XnK}Accept").ToString(), GameTexts.FindText("str_cancel").ToString(), () =>
       {
-        SubModule.PartySettingsManager.DeletePartyTemplate(template);
+        SubModule.PartyAIClanPartySettingsManager.DeletePartyTemplate(template);
         _onDeleteCallback.Invoke();
       }, () => { }), true);
     }

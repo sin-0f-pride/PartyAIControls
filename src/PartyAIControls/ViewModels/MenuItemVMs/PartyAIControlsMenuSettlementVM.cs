@@ -21,7 +21,7 @@ namespace PartyAIControls.ViewModels.MenuItemVMs
       Party = settlement.Town?.GarrisonParty?.Party;
     }
 
-    internal override PartyAIClanPartySettings Settings => SubModule.PartySettingsManager.Settings(Settlement);
+    internal override PartyAIClanPartySettings Settings => SubModule.PartyAIClanPartySettingsManager.Settings(Settlement);
 
     [DataSourceProperty] public override string LeaderName => Party.Name.ToString();
     [DataSourceProperty] public override bool CanShowLocationOfHero => true;
@@ -32,7 +32,7 @@ namespace PartyAIControls.ViewModels.MenuItemVMs
     [DataSourceProperty] public override string ActiveOrder => "";
     [DataSourceProperty] public BasicTooltipViewModel WallsHint => new(() => CampaignUIHelper.GetTownWallsTooltip(Settlement.Town));
 
-    public override void EditPartyOptions() => SubModule.InformationManager.ShowGarrisonOptionsInquiry(Settings, RefreshValues);
+    public override void EditPartyOptions() => SubModule.PACInformationManager.ShowGarrisonOptionsInquiry(Settings, RefreshValues);
 
     public override void ShowHeroOnMap()
     {

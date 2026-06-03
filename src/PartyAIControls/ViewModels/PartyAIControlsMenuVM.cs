@@ -191,9 +191,9 @@ namespace PartyAIControls.ViewModels
 
     public void FineTunePartyTemplate() => Dialogs.FineTune.Tune();
 
-    public void OpenModOptions() => SubModule.InformationManager.ShowModOptionsInquiry(RefreshPartyList);
+    public void OpenModOptions() => SubModule.PACInformationManager.ShowModOptionsInquiry(RefreshPartyList);
 
-    public void EditDefaultSettings() => SubModule.InformationManager.ShowDefaultSettingsInquiry(null);
+    public void EditDefaultSettings() => SubModule.PACInformationManager.ShowDefaultSettingsInquiry(null);
 
     private void OnNewPartySelectionOver()
     {
@@ -212,13 +212,13 @@ namespace PartyAIControls.ViewModels
 
     public static void GetManageableHeroes(in List<Hero> list, bool clanOnly, bool showAll)
     {
-      foreach (Hero hero in Hero.AllAliveHeroes.Where(l => l != null && l.CanLeadParty() && SubModule.PartySettingsManager.IsManageable(l) && (!clanOnly || l.Clan == Clan.PlayerClan)).ToList())
+      foreach (Hero hero in Hero.AllAliveHeroes.Where(l => l != null && l.CanLeadParty() && SubModule.PartyAIClanPartySettingsManager.IsManageable(l) && (!clanOnly || l.Clan == Clan.PlayerClan)).ToList())
       {
         if (showAll || (hero.PartyBelongedTo != null && hero.IsPartyLeader))
         {
           if (hero.PartyBelongedTo != null && hero.PartyBelongedTo.IsCaravan)
           {
-            if (SubModule.PartySettingsManager.ManageCaravans)
+            if (SubModule.PartyAIClanPartySettingsManager.ManageCaravans)
             {
               list.Add(hero);
             }
@@ -246,7 +246,7 @@ namespace PartyAIControls.ViewModels
       }
       foreach (Settlement settlement in Settlement.All)
       {
-        if (SubModule.PartySettingsManager.IsGarrisonManageable(settlement) && settlement?.Town?.GarrisonParty?.Party != null)
+        if (SubModule.PartyAIClanPartySettingsManager.IsGarrisonManageable(settlement) && settlement?.Town?.GarrisonParty?.Party != null)
         {
           list.Add(new PartyAIControlsMenuSettlementVM(settlement, this));
         }

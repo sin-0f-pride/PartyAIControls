@@ -17,13 +17,13 @@ namespace PartyAIControls.ViewModels.MenuItemVMs
     [DataSourceProperty] public override string ActiveOrder => Party.MobileParty.PartyTradeGold.ToString();
     [DataSourceProperty] public override string LeaderName => Party.Name.ToString();
 
-    public override void EditPartyOptions() => SubModule.InformationManager.ShowCaravanOptionsInquiry(Settings, RefreshValues);
+    public override void EditPartyOptions() => SubModule.PACInformationManager.ShowCaravanOptionsInquiry(Settings, RefreshValues);
 
     public override void RefreshValues()
     {
       base.RefreshValues();
 
-      if (SubModule.PartySettingsManager.AllowTroopConversion || SubModule.PartySettingsManager.AllowCaravanConversion(Leader))
+      if (SubModule.PartyAIClanPartySettingsManager.AllowTroopConversion || SubModule.PartyAIClanPartySettingsManager.AllowCaravanConversion(Leader))
       {
         EditCompositionHint = new(new TextObject("{=PAIQNUqwt4C}Edit"));
         ChangeTemplateHint = new(new TextObject("{=PAIXIv9UgAt}Change"));

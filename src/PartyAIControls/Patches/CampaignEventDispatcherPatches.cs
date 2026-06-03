@@ -9,7 +9,7 @@ namespace PartyAIControls.HarmonyPatches
     {
         private static void Postfix(MobileParty party, ref PartyThinkParams partyThinkParams)
         {
-            SubModule.PartyThinker.ProcessOrder(party, partyThinkParams);
+            SubModule.PartyAIThinker.ProcessOrder(party, partyThinkParams);
         }
     }
 }

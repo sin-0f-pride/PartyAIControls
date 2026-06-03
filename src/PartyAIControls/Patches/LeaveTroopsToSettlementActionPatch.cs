@@ -16,11 +16,11 @@ namespace PartyAIControls.HarmonyPatches
             if (mobileParty.LeaderHero == null) { return true; }
             if (numberOfTroopsToLeave > 0)
             {
-                return SubModule.PartySettingsManager.Settings(mobileParty.LeaderHero).AllowDonateTroops;
+                return SubModule.PartyAIClanPartySettingsManager.Settings(mobileParty.LeaderHero).AllowDonateTroops;
             }
             else
             {
-                return SubModule.PartySettingsManager.Settings(mobileParty.LeaderHero).AllowTakeTroopsFromSettlement;
+                return SubModule.PartyAIClanPartySettingsManager.Settings(mobileParty.LeaderHero).AllowTakeTroopsFromSettlement;
             }
         }
     }

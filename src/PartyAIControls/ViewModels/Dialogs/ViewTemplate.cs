@@ -17,7 +17,7 @@ namespace PartyAIControls.ViewModels.Dialogs
     {
       string title = new TextObject("{=PAIlfXfoNTy}Select which template to view").ToString();
 
-      List<InquiryElement> list = SubModule.PartySettingsManager.AllTemplates.OrderBy(t => t.Name).ToList().ConvertAll(t =>
+      List<InquiryElement> list = SubModule.PartyAIClanPartySettingsManager.AllTemplates.OrderBy(t => t.Name).ToList().ConvertAll(t =>
         new InquiryElement(t, t.Name, new CharacterImageIdentifier(CampaignUIHelper.GetCharacterCode(t.Troops.First())))
       );
       MBInformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(title, string.Empty, list, isExitShown: true, 1, 1, GameTexts.FindText("str_done").ToString(), GameTexts.FindText("str_cancel").ToString(), ViewPartyTemplateCallback, null, "", true));

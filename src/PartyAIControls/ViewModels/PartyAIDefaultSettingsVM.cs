@@ -51,7 +51,7 @@ namespace PartyAIControls.ViewModels
 
       public void EditComposition()
       {
-        SubModule.InformationManager.ShowPartyCompositionInquiry(_settings, (PartyCompositionObect composition) =>
+        SubModule.PACInformationManager.ShowPartyCompositionInquiry(_settings, (PartyCompositionObect composition) =>
         {
           _settings.Composition = composition;
           RefreshValues();
@@ -65,13 +65,13 @@ namespace PartyAIControls.ViewModels
         switch (_optionsType)
         {
           case OptionsType.Party:
-            SubModule.InformationManager.ShowPartyOptionsInquiry(_settings, RefreshValues);
+            SubModule.PACInformationManager.ShowPartyOptionsInquiry(_settings, RefreshValues);
             break;
           case OptionsType.Caravan:
-            SubModule.InformationManager.ShowCaravanOptionsInquiry(_settings, RefreshValues);
+            SubModule.PACInformationManager.ShowCaravanOptionsInquiry(_settings, RefreshValues);
             break;
           case OptionsType.Garrison:
-            SubModule.InformationManager.ShowGarrisonOptionsInquiry(_settings, RefreshValues);
+            SubModule.PACInformationManager.ShowGarrisonOptionsInquiry(_settings, RefreshValues);
             break;
           default:
             break;
@@ -108,11 +108,11 @@ namespace PartyAIControls.ViewModels
     {
       TitleText = new TextObject("{=PAIykz3Pc1F}Edit Default Settings").ToString();
 
-      _defaultClanPartySettings = SubModule.PartySettingsManager._defaultClanPartySettings.Clone(null);
-      _defaultClanCaravanSettings = SubModule.PartySettingsManager._defaultClanCaravanSettings.Clone(null);
-      _defaultClanGarrisonSettings = SubModule.PartySettingsManager._defaultClanGarrisonSettings.Clone(null);
-      _defaultKingdomPartySettings = SubModule.PartySettingsManager._defaultKingdomPartySettings.Clone(null);
-      _defaultKingdomGarrisonSettings = SubModule.PartySettingsManager._defaultKingdomGarrisonSettings.Clone(null);
+      _defaultClanPartySettings = SubModule.PartyAIClanPartySettingsManager._defaultClanPartySettings.Clone(null);
+      _defaultClanCaravanSettings = SubModule.PartyAIClanPartySettingsManager._defaultClanCaravanSettings.Clone(null);
+      _defaultClanGarrisonSettings = SubModule.PartyAIClanPartySettingsManager._defaultClanGarrisonSettings.Clone(null);
+      _defaultKingdomPartySettings = SubModule.PartyAIClanPartySettingsManager._defaultKingdomPartySettings.Clone(null);
+      _defaultKingdomGarrisonSettings = SubModule.PartyAIClanPartySettingsManager._defaultKingdomGarrisonSettings.Clone(null);
 
       ItemList = new()
       {
@@ -163,11 +163,11 @@ namespace PartyAIControls.ViewModels
 
     public void AcceptEditDefaultSettings()
     {
-      SubModule.PartySettingsManager._defaultClanPartySettings = _defaultClanPartySettings;
-      SubModule.PartySettingsManager._defaultClanCaravanSettings = _defaultClanCaravanSettings;
-      SubModule.PartySettingsManager._defaultClanGarrisonSettings = _defaultClanGarrisonSettings;
-      SubModule.PartySettingsManager._defaultKingdomPartySettings = _defaultKingdomPartySettings;
-      SubModule.PartySettingsManager._defaultKingdomGarrisonSettings = _defaultKingdomGarrisonSettings;
+      SubModule.PartyAIClanPartySettingsManager._defaultClanPartySettings = _defaultClanPartySettings;
+      SubModule.PartyAIClanPartySettingsManager._defaultClanCaravanSettings = _defaultClanCaravanSettings;
+      SubModule.PartyAIClanPartySettingsManager._defaultClanGarrisonSettings = _defaultClanGarrisonSettings;
+      SubModule.PartyAIClanPartySettingsManager._defaultKingdomPartySettings = _defaultKingdomPartySettings;
+      SubModule.PartyAIClanPartySettingsManager._defaultKingdomGarrisonSettings = _defaultKingdomGarrisonSettings;
 
       _onCloseDefaultSettings?.Invoke();
     }

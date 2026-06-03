@@ -10,12 +10,12 @@ namespace PartyAIControls.HarmonyPatches
     {
         private static void Prefix(PartyBase capturerParty, Hero prisonerCharacter, ref bool isEventCalled)
         {
-            if (!SubModule.PartySettingsManager.IsHeroManageable(capturerParty?.LeaderHero))
+            if (!SubModule.PartyAIClanPartySettingsManager.IsHeroManageable(capturerParty?.LeaderHero))
             {
                 return;
             }
 
-            if (!SubModule.PartySettingsManager.Settings(capturerParty?.LeaderHero).AllowLordPrisoners)
+            if (!SubModule.PartyAIClanPartySettingsManager.Settings(capturerParty?.LeaderHero).AllowLordPrisoners)
             {
                 isEventCalled = false;
             }
@@ -23,12 +23,12 @@ namespace PartyAIControls.HarmonyPatches
 
         private static void Postfix(PartyBase capturerParty, Hero prisonerCharacter, bool isEventCalled)
         {
-            if (!SubModule.PartySettingsManager.IsHeroManageable(capturerParty?.LeaderHero))
+            if (!SubModule.PartyAIClanPartySettingsManager.IsHeroManageable(capturerParty?.LeaderHero))
             {
                 return;
             }
 
-            if (!SubModule.PartySettingsManager.Settings(capturerParty?.LeaderHero).AllowLordPrisoners)
+            if (!SubModule.PartyAIClanPartySettingsManager.Settings(capturerParty?.LeaderHero).AllowLordPrisoners)
             {
                 EndCaptivityAction.ApplyByReleasedAfterBattle(prisonerCharacter);
             }
