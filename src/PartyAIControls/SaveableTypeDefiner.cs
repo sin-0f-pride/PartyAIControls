@@ -1,4 +1,4 @@
-﻿using PartyAIControls.CampaignBehaviors;
+﻿using PartyAIControls.Behaviors;
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;

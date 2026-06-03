@@ -8,7 +8,7 @@ using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using static PartyAIControls.PAICustomOrder;
 
-namespace PartyAIControls.HarmonyPatches
+namespace PartyAIControls.Patches
 {
     [HarmonyPatch]
     internal class AssumingControlPatches

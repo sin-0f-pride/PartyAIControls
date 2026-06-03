@@ -18,7 +18,7 @@ using TaleWorlds.Localization;
 using static Helpers.InventoryScreenHelper;
 
 
-namespace PartyAIControls.CampaignBehaviors
+namespace PartyAIControls.Behaviors
 {
     public class PartyAIClanPartySettingsManager : CampaignBehaviorBase
     {

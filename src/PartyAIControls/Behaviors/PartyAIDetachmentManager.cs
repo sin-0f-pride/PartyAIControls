@@ -9,7 +9,7 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 
-namespace PartyAIControls.CampaignBehaviors
+namespace PartyAIControls.Behaviors
 {
   internal class PartyAIDetachmentManager : CampaignBehaviorBase
   {

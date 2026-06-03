@@ -1,6 +1,6 @@
 ﻿using Bannerlord.UIExtenderEx;
 using HarmonyLib;
-using PartyAIControls.CampaignBehaviors;
+using PartyAIControls.Behaviors;
 using PartyAIControls.GauntletUI;
 using PartyAIControls.Models;
 using System;

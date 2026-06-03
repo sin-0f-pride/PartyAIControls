@@ -1,4 +1,4 @@
-﻿using PartyAIControls.UIExtenderPatches;
+﻿using PartyAIControls.PrefabExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

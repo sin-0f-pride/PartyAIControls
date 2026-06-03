@@ -6,7 +6,7 @@ using TaleWorlds.Core.ViewModelCollection.ImageIdentifiers;
 using TaleWorlds.Core.ViewModelCollection.Information;
 using TaleWorlds.Library;
 
-namespace PartyAIControls.UIExtenderPatches
+namespace PartyAIControls.PrefabExtensions
 {
     [ViewModelMixin]
     internal class InquiryElementVMMixin : BaseViewModelMixin<InquiryElementVM>

@@ -2,7 +2,7 @@
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 
-namespace PartyAIControls.HarmonyPatches
+namespace PartyAIControls.Patches
 {
     [HarmonyPatch(typeof(CampaignEventDispatcher), "AiHourlyTick")]
     internal class CampaignEventDispatcherPatches

@@ -1,5 +1,5 @@
 ﻿using Helpers;
-using PartyAIControls.HarmonyPatches;
+using PartyAIControls.Patches;
 using PartyAIControls.Models;
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ using TaleWorlds.SaveSystem;
 using static PartyAIControls.PAICustomOrder;
 using static TaleWorlds.CampaignSystem.Party.MobileParty;
 
-namespace PartyAIControls.CampaignBehaviors
+namespace PartyAIControls.Behaviors
 {
     public class PAISettlementVisitLog
     {

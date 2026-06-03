@@ -10,7 +10,7 @@ using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade.ViewModelCollection.Inquiries;
 
-namespace PartyAIControls.UIExtenderPatches
+namespace PartyAIControls.PrefabExtensions
 {
   [ViewModelMixin(nameof(MultiSelectionQueryPopUpVM.SetData))]
   internal class MultiSelectionQueryPopupVMMixin : BaseViewModelMixin<MultiSelectionQueryPopUpVM>

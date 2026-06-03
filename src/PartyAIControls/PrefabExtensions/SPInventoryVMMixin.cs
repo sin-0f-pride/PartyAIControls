@@ -11,7 +11,7 @@ using TaleWorlds.Core.ViewModelCollection.Information;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 
-namespace PartyAIControls.UIExtenderPatches
+namespace PartyAIControls.PrefabExtensions
 {
   [ViewModelMixin("RefreshInformationValues")]
   internal class SPInventoryVMMixin : BaseViewModelMixin<SPInventoryVM>

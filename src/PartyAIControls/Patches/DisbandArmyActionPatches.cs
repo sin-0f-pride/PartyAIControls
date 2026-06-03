@@ -2,7 +2,7 @@
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 
-namespace PartyAIControls.HarmonyPatches
+namespace PartyAIControls.Patches
 {
     // this prevents disbanding for not having enough AI objectives which can be caused by the orders
     [HarmonyPatch(typeof(DisbandArmyAction), "ApplyByUnknownReason")]
